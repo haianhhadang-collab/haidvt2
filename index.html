@@ -137,6 +137,19 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--mu
 .sl.dup{border-color:var(--do);background:var(--do-nen)}
 .sl .cha{display:block;font-size:11.5px;color:var(--do);font-weight:600;margin-top:3px}
 .sl .lift{background:none;border:0;padding:2px 0;font-size:12px;color:var(--muc3);text-decoration:underline}
+/* người nộp — nằm ngoài số thứ tự, đầu mỗi đáp án */
+.sl .ais{flex:none;width:92px;display:flex;flex-direction:column;gap:6px;align-self:stretch;justify-content:flex-start;
+  padding-right:8px;border-right:1px dashed var(--vien)}
+.sl .ai{display:flex;align-items:center;gap:6px;min-width:0}
+.sl .ai svg{width:24px;height:24px;flex:none}
+.sl .ai .aw{display:flex;flex-direction:column;min-width:0}
+.sl .ai .an{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:11.5px;line-height:1.1;overflow-wrap:anywhere}
+.sl .ai .ah{font-size:10.5px;line-height:1.15;color:var(--muc2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl .ai.trong{color:var(--muc3);font-size:11px;font-style:italic}
+.sl .bl+.bl{margin-top:6px;padding-top:6px;border-top:1px dashed var(--vien)}
+@media (max-width:420px){ .sl .ais{width:76px} .sl .ai svg{width:20px;height:20px} .sl .ai .an{font-size:10.5px} }
+.netdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--muc3)}
+.netdot.on{background:var(--bang)} .netdot.dang{background:var(--vang)}
 
 .thung{border:1.5px dashed var(--do);background:var(--do-nen);border-radius:10px;padding:11px 12px;margin-top:14px}
 .thung h3{font-size:15px;color:var(--do);display:flex;align-items:center;gap:8px}
@@ -453,7 +466,7 @@ const BAI = [{"id":"b2","buoi":2,"chude":"01","ten":"Khái niệm và ý nghĩa 
   <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Vào phòng nhóm</div></div>
   <div class="stack">
     <div class="card stack">
-      <label class="f">Mã phòng đội trưởng đọc<input type="text" id="v-ma" placeholder="NHÓM 1" autocomplete="off" style="font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:.06em"></label>
+      <label class="f">Nhóm + STT<input type="text" id="v-ma" placeholder="NHÓM 1" autocomplete="off" style="font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:.06em"></label>
       <label class="f">Tên của bạn<input type="text" id="v-ten" maxlength="30" placeholder="Tên bạn" autocomplete="off"></label>
       <div id="v-offbox" hidden>
         <div class="grid2">
@@ -643,7 +656,7 @@ const S = {
   che:"ca", laTruong:false, ten:"", doi:1, baiId:"b2", phut:12, siSo:6, seed:0, van:"",
   nv:null, xap:[], dat:{}, cam:null, vong:"kin", datKin:null,
   batDau:0, conLai:0, hetGio:false, daNop:false,
-  banKhac:{}, ketQua:null
+  banKhac:{}, banTay:{}, ketQua:null
 };
 let dongHo = null;
 
@@ -653,23 +666,205 @@ let dongHo = null;
 let DB = null, ONLINE = false;
 let huyTraLoi = null, huyKQ = null, huyBang = null;
 
+/* ------------------------------------------------------------
+   ĐƯỜNG NỐI GIỮA CÁC MÁY khi trang chạy trên GitHub Pages.
+   Mỗi máy nối cùng lúc tới vài máy chủ MQTT công cộng (qua
+   WebSocket), gửi và nghe trên cùng một "địa chỉ" của trò chơi.
+   Tin nhắn được máy chủ giữ lại (retained) nên máy vào sau vẫn
+   đọc được bản mới nhất. Máy nào hỏng thì còn máy khác.
+   Thêm ?noi=bc vào đường dẫn để chỉ nối các tab trong một trình
+   duyệt (dùng khi thử trên một máy).
+   ------------------------------------------------------------ */
+const MAY_CHU = [
+  {url:"wss://broker.emqx.io:8084/mqtt"},
+  {url:"wss://broker.hivemq.com:8884/mqtt"},
+  {url:"wss://public.cloud.shiftr.io/mqtt", user:"public", pass:"public"}
+];
+const KHONG_GIAN = "hanu-pol1001/ditimlienket/v2/";
+const CHI_BC = /[?&]noi=bc\b/.test(location.search);
+
+function taoMQTT(cfg, onMsg, onState){
+  let ws = null, ok = false, buf = new Uint8Array(0), pid = 0, ping = null, lui = 1000;
+  const subs = new Set(), cho = new Map();
+  const te = new TextEncoder(), td = new TextDecoder();
+  const vlen = n=>{ const o=[]; do{ let b = n % 128; n = Math.floor(n/128); if(n>0) b |= 128; o.push(b); }while(n>0); return o; };
+  const chu = x=>{ const b = te.encode(x); return [b.length>>8, b.length&255].concat(Array.from(b)); };
+  const goi = (h, body)=>{
+    if(!ws || ws.readyState !== 1) return false;
+    ws.send(new Uint8Array([h].concat(vlen(body.length), body))); return true; };
+  const moiId = ()=>{ pid = pid % 65535 + 1; return pid; };
+  function dangKy(f){ const id = moiId(); goi(0x82, [id>>8, id&255].concat(chu(f), [1])); return id; }
+  function ketNoi(){
+    try{ ws = new WebSocket(cfg.url, ["mqtt"]); }catch(e){ henLai(); return; }
+    ws.binaryType = "arraybuffer";
+    ws.onopen = ()=>{
+      let co = 0x02; let pl = chu("dtlk" + Math.random().toString(36).slice(2, 12));
+      if(cfg.user){ co |= 0x80; pl = pl.concat(chu(cfg.user)); }
+      if(cfg.pass){ co |= 0x40; pl = pl.concat(chu(cfg.pass)); }
+      goi(0x10, chu("MQTT").concat([4, co, 0, 30], pl));
+    };
+    ws.onmessage = e=>{
+      const d = new Uint8Array(e.data), n = new Uint8Array(buf.length + d.length);
+      n.set(buf); n.set(d, buf.length); buf = n; tach(); };
+    ws.onclose = ()=>{
+      const truoc = ok; ok = false; ws = null; buf = new Uint8Array(0);
+      clearInterval(ping); cho.forEach(f=>f(false)); cho.clear();
+      if(truoc) onState(); henLai(); };
+    ws.onerror = ()=>{ try{ ws && ws.close(); }catch(e){} };
+  }
+  function henLai(){ setTimeout(ketNoi, lui); lui = Math.min(lui*2, 15000); }
+  function tach(){
+    for(;;){
+      if(buf.length < 2) return;
+      let m = 1, len = 0, i = 1, b;
+      do{ if(i >= buf.length) return; b = buf[i++]; len += (b & 127) * m; m *= 128; }while(b & 128);
+      if(buf.length < i + len) return;
+      const h = buf[0], p = buf.slice(i, i + len); buf = buf.slice(i + len);
+      try{ xuLy(h, p); }catch(e){}
+    }
+  }
+  function xuLy(h, p){
+    const t = h >> 4;
+    if(t === 2){                                   /* CONNACK */
+      if(p[1] === 0){ ok = true; lui = 1000; subs.forEach(dangKy);
+        clearInterval(ping); ping = setInterval(()=>goi(0xC0, []), 25000); onState(); }
+      else { try{ ws.close(); }catch(e){} }
+    } else if(t === 3){                            /* PUBLISH đến */
+      const qos = (h >> 1) & 3, tl = (p[0] << 8) | p[1];
+      const topic = td.decode(p.subarray(2, 2 + tl)); let o = 2 + tl;
+      if(qos > 0){ const id = (p[o] << 8) | p[o+1]; o += 2; goi(0x40, [id>>8, id&255]); }
+      onMsg(topic, td.decode(p.subarray(o)));
+    } else if(t === 4 || t === 9){                 /* PUBACK · SUBACK */
+      const id = (p[0] << 8) | p[1], f = cho.get(id);
+      if(f){ cho.delete(id); f(true); }
+    }
+  }
+  const doi = (id, r, ms)=>{ cho.set(id, r); setTimeout(()=>{ if(cho.delete(id)) r(false); }, ms); };
+  return {
+    get ok(){ return ok; },
+    batDau: ketNoi,
+    sub(f){
+      if(subs.has(f)) return Promise.resolve(true);
+      subs.add(f);
+      if(!ok) return Promise.resolve(false);
+      return new Promise(r=> doi(dangKy(f), r, 4000));
+    },
+    pub(topic, text){
+      return new Promise(r=>{
+        if(!ok) return r(false);
+        const id = moiId();
+        const pl = chu(topic).concat([id>>8, id&255], Array.from(te.encode(text)));
+        if(!goi(0x33, pl)) return r(false);          /* QoS 1, giữ lại */
+        doi(id, r, 6000);
+      });
+    }
+  };
+}
+
+const SYNC = (()=>{
+  const kho = new Map(), nghe = new Set(), may = [];
+  let bc = null, batDauLuc = 0, baoDoi = ()=>{};
+  const dc = p => KHONG_GIAN + p;
+  const khop = (f, t)=>{
+    if(f.endsWith("/+")){ const g = f.slice(0, -1); return t.startsWith(g) && t.length > g.length && !t.slice(g.length).includes("/"); }
+    return f === t; };
+  function nhan(t, text){
+    if(!t.startsWith(KHONG_GIAN) || !text) return;
+    let r; try{ r = JSON.parse(text); }catch(e){ return; }
+    if(!r || typeof r.t !== "number" || typeof r.v !== "object") return;
+    const cu = kho.get(t);
+    if(cu && cu.t >= r.t) return;
+    kho.set(t, r);
+    nghe.forEach(l=>{ if(khop(l.f, t)) try{ l.cb(); }catch(e){} });
+  }
+  const coMay = ()=> CHI_BC || may.some(m=>m.ok);
+  const cho = (dk, ms)=> new Promise(r=>{
+    if(dk()) return r(true);
+    const t0 = Date.now(), iv = setInterval(()=>{
+      if(dk()){ clearInterval(iv); r(true); } else if(Date.now()-t0 > ms){ clearInterval(iv); r(false); } }, 100); });
+  async function sub(f){
+    if(bc) bc.postMessage({k:"hoi", f});
+    await Promise.all(may.map(m=>m.sub(f)));
+  }
+  function snap(p){ const t = dc(p), r = kho.get(t);
+    return {exists: !!r, id: p.split("/").pop(), data: ()=> r ? r.v : undefined}; }
+  async function ghi(p, v){
+    const t = dc(p), tx = JSON.stringify({t: Date.now(), v});
+    if(!coMay()) await cho(coMay, 6000);
+    nhan(t, tx);
+    if(bc) bc.postMessage({k:"pub", t, tx});
+    if(CHI_BC) return;
+    const kq = await Promise.all(may.map(m=>m.pub(t, tx)));
+    if(!kq.some(Boolean)) throw new Error("không gửi được");
+  }
+  async function doc1(p){
+    if(!coMay()) await cho(coMay, 6000);
+    if(!coMay()) throw new Error("chưa nối");
+    const t = dc(p);
+    await sub(t);
+    await cho(()=>kho.has(t), 1200);
+    return snap(p);
+  }
+  function ngheDoc(p, cb){
+    const t = dc(p), l = {f: t, cb: ()=>cb(snap(p))};
+    nghe.add(l); sub(t);
+    if(kho.has(t)) setTimeout(l.cb, 0);
+    return ()=> nghe.delete(l);
+  }
+  function ngheBo(p, cb){
+    const f = dc(p) + "/+", g = f.slice(0, -1);
+    const l = {f, cb: ()=>{ const docs = [];
+      kho.forEach((r, t)=>{ if(khop(f, t)) docs.push({id: t.slice(g.length), data: ()=> r.v}); });
+      cb({docs}); }};
+    nghe.add(l); sub(f); setTimeout(l.cb, 0);
+    return ()=> nghe.delete(l);
+  }
+  return {
+    coMay,
+    dangThu: ()=> !coMay() && Date.now() - batDauLuc < 9000,
+    batDau(onDoi){
+      baoDoi = onDoi || baoDoi; batDauLuc = Date.now();
+      if("BroadcastChannel" in window){
+        bc = new BroadcastChannel("ditimlienket");
+        bc.onmessage = e=>{ const d = e.data || {};
+          if(d.k === "pub") nhan(d.t, d.tx);
+          else if(d.k === "hoi") kho.forEach((r, t)=>{ if(khop(d.f, t)) bc.postMessage({k:"pub", t, tx: JSON.stringify(r)}); }); };
+      }
+      if(!CHI_BC) MAY_CHU.forEach(c=>{ const m = taoMQTT(c, nhan, ()=>baoDoi()); may.push(m); m.batDau(); });
+      setTimeout(()=>baoDoi(), 9500);
+      baoDoi();
+    },
+    doc: p => ({ set: v => ghi(p, v), get: () => doc1(p), onSnapshot: (cb)=> ngheDoc(p, cb) }),
+    collection: p => ({ onSnapshot: (cb)=> ngheBo(p, cb) })
+  };
+})();
+
 async function noiDB(){
   try{
     if(window.claude && window.claude.use){
       const db = await window.claude.use("db");
-      if(db){ DB = db; ONLINE = true; }
+      if(db){ DB = db; ONLINE = true; capNhatNet(); return; }
     }
   }catch(e){}
-  capNhatNet();
+  if(!("WebSocket" in window)){ capNhatNet(); return; }
+  DB = SYNC;
+  SYNC.batDau(()=>{ ONLINE = SYNC.coMay(); capNhatNet(); });
 }
 function capNhatNet(){
+  const dang = DB === SYNC && !ONLINE && SYNC.dangThu();
+  const cham = `<span class="netdot ${ONLINE ? "on" : dang ? "dang" : ""}"></span>`;
   const el = $("#tr-net");
-  if(el) el.innerHTML = ONLINE
+  if(el) el.innerHTML = cham + (ONLINE
     ? "Máy này nối được với máy của các thành viên — họ bấm Nộp là phần của họ hiện thẳng lên đây."
-    : "Máy này <b>không nối</b> được với máy của các thành viên. Cả nhóm sẽ dùng cách đọc số: các bạn đọc, bạn gõ vào.";
+    : dang ? "Đang nối với máy của các thành viên…"
+    : "Máy này <b>không nối</b> được với máy của các thành viên. Cả nhóm sẽ dùng cách đọc số: các bạn đọc, bạn gõ vào.");
   const off = $("#bg-off");
   if(off){ off.hidden = ONLINE;
     off.innerHTML = "Đọc thêm cho cả nhóm: <b>bài buổi " + (layBai(S.baiId)||{buoi:"?"}).buoi + "</b> · <b>" + S.siSo + " máy</b> · <b>" + S.phut + " phút kín</b>."; }
+  const gop = $("#bg-gop");
+  if(gop) gop.textContent = ONLINE ? "Nhập tay mã (bạn nào không nối được)" : "Nhập tay mã của các bạn";
+  const vb = $("#v-offbox");
+  if(vb && $("#s-vao").classList.contains("on")) vb.hidden = ONLINE || dang;
 }
 function goc(){ return "phong/nhom" + S.doi; }
 function dungNghe(){ [huyTraLoi, huyKQ, huyBang].forEach(f=>{ try{ if(f) f(); }catch(e){} });
@@ -762,10 +957,11 @@ $("#tr-tao").onclick = async ()=>{
   S.baiId = $("#tr-bai").value;
   S.phut = Number($("#tr-phut").value);
   S.siSo = Math.max(2, Math.min(8, Number($("#tr-siso").value)||6));
-  S.seed = ONLINE ? (Math.floor(Math.random()*900)+100) : bam(S.baiId+"|"+S.doi+"|"+S.siSo);
+  /* hạt giống cố định theo bài · nhóm · số máy, để máy nào lỡ mất kết nối vẫn nhận đúng xấp mảnh */
+  S.seed = bam(S.baiId+"|"+S.doi+"|"+S.siSo);
   S.van = Date.now().toString(36);
   S.nv = danNV(S.doi, S.siSo)[0];
-  S.banKhac = {}; S.dat = {}; S.cam = null; S.daNop = false; S.ketQua = null;
+  S.banKhac = {}; S.banTay = {}; S.dat = {}; S.cam = null; S.daNop = false; S.ketQua = null;
   const xaps = chia(deck(layBai(S.baiId), S.seed), S.siSo);
   S.xap = xaps[0] || [];
   dungNghe();
@@ -775,10 +971,11 @@ $("#tr-tao").onclick = async ()=>{
         seed:S.seed, batDau:Date.now(), tenTruong:S.ten, mo:true});
     }catch(e){ ONLINE = false; }
     ngheTraLoi();
+    $("#tr-net") && capNhatNet();
   }
   $("#bg-ma").textContent = "NHÓM " + S.doi;
   $("#bg-hoi").textContent = layBai(S.baiId).hoi;
-  $("#bg-gop").hidden = !!DB;
+  $("#bg-gop").hidden = false;
   capNhatNet();
   batDauVan(true); show("bang"); veSan();
 };
@@ -789,7 +986,7 @@ function ngheTraLoi(){
     huyTraLoi = DB.collection(goc()+"/traloi").onSnapshot(snap=>{
       const m = {};
       (snap.docs||[]).forEach(d=>{ const r = d.data(); if(r && r.van === S.van) m[d.id] = r; });
-      S.banKhac = m;
+      S.banKhac = Object.assign({}, S.banTay, m);
       if($("#s-bang").classList.contains("on")) veSan();
       if($("#s-cho").classList.contains("on")) veSan();
     }, ()=>{});
@@ -804,7 +1001,7 @@ $("#go-vao").onclick = ()=>{
   S.che="nhom"; S.laTruong=false; VCHON = null; VPHONG = null;
   $("#v-loi").textContent = "";
   veBai($("#v-bai"), S.baiId);
-  $("#v-offbox").hidden = !!DB;
+  $("#v-offbox").hidden = ONLINE || (DB === SYNC && SYNC.dangThu());
   veNhanVat(); show("vao");
 };
 function docNhom(){
@@ -825,7 +1022,10 @@ async function veNhanVat(){
   if(DB){
     try{
       const sn = await DB.doc("phong/nhom"+n).get();
-      if(!sn.exists || !sn.data().mo){
+      const ph = sn.exists ? (sn.data() || {}) : {};
+      /* phòng cũ từ buổi trước (quá giờ chơi + 20 phút) coi như chưa mở */
+      const cu = !ph.batDau || Date.now() - ph.batDau > ((ph.phut||15) + MO + 20) * 60000;
+      if(!sn.exists || !ph.mo || cu){
         g.innerHTML = ""; VPHONG = null;
         ghi.innerHTML = `<b>Nhóm ${n} chưa mở phòng.</b> Chờ đội trưởng bấm Mở phòng rồi gõ lại mã.`;
         return;
@@ -854,7 +1054,7 @@ $("#v-siso").oninput = veNhanVat;
 $("#v-vao").onclick = ()=>{
   const n = docNhom();
   if(!n){ $("#v-loi").textContent = "Mã chưa đúng. Gõ NHÓM 1, NHÓM 2, NHÓM 3 hoặc NHÓM 4 — gõ mỗi con số cũng được."; return; }
-  if(DB && !VPHONG){ $("#v-loi").textContent = `Nhóm ${n} chưa mở phòng. Chờ đội trưởng một chút rồi bấm lại.`; return; }
+  if(ONLINE && !VPHONG){ $("#v-loi").textContent = `Nhóm ${n} chưa mở phòng. Chờ đội trưởng một chút rồi bấm lại.`; return; }
   if(!VCHON){ $("#v-loi").textContent = "Chọn một nhân vật đã — và nhớ hỏi to xem có bạn nào lấy trùng không."; return; }
   S.che="nhom"; S.laTruong=false; S.doi = n;
   if(VPHONG){
@@ -893,10 +1093,11 @@ async function kiemTraTrung(nv){
 function ngheKetQua(){
   if(!DB || S.van === "off") return;
   try{
-    huyKQ = DB.doc(goc()+"/kq/"+S.van).onSnapshot(sn=>{
+    huyKQ = DB.doc(goc()+"/kq").onSnapshot(sn=>{
       if(!sn.exists) return;
       const r = sn.data();
-      if(!r || !r.vt) return;
+      if(!r || !r.vt || (r.van && r.van !== S.van)) return;
+      if(S.ketQua && S.ketQua.luc === r.luc) return;
       dungDongHo();
       S.ketQua = r;
       const bai = layBai(S.baiId), sua = r.sua || {};
@@ -968,7 +1169,7 @@ function chuanBiManChoi(){
   $("#p-vai").style.color = nv ? nv.hex : "";
   $("#p-nop").textContent = S.che === "nhom" ? "Nộp cho đội trưởng" : "Chấm bài";
   $("#p-huong").innerHTML = S.che === "nhom"
-    ? `Bạn cầm <b>${S.xap.length} mảnh</b> trong tổng số ${bai.that.length + bai.gia.length}. Không ai thấy mảnh của bạn, và bạn không thấy mảnh của ai — muốn biết ô nào còn trống thì <b>phải hỏi to</b>.`
+    ? `Bạn sở hữu <b>${S.xap.length}/${bai.that.length + bai.gia.length} mảnh ghép</b>. Không ai thấy mảnh của bạn, và bạn không thấy mảnh của ai — muốn biết ô nào còn trống thì <b>phải tương tác nhóm</b>.`
     : `Bạn cầm <b>toàn bộ ${S.xap.length} mảnh</b>. Đặt ${bai.that.length} mảnh thật vào đúng ô, ném <b>${bai.gia.length} mảnh giả</b> vào thùng loại.`;
 }
 function tienTo(){
@@ -987,14 +1188,14 @@ function banDo(xemDoi){
     Object.keys(S.banKhac).forEach(k=>{
       const r = S.banKhac[k], nv = timNV(S.doi, S.siSo, r.nvId) || {ten:r.nvTen, hex:r.hex};
       Object.keys(r.dat||{}).forEach(uid=>{
-        map[uid] = {pos: r.dat[uid], nv, tx: (tat[uid]||{}).tx || "", cuaToi:false,
+        map[uid] = {pos: r.dat[uid], nv, ten: r.ten || "", tx: (tat[uid]||{}).tx || "", cuaToi:false,
           sua: !!(r.kin && r.kin[uid] !== r.dat[uid])};
       });
     });
   }
   const me = nvCuaToi();
   Object.keys(S.dat).forEach(uid=>{
-    map[uid] = {pos: S.dat[uid], nv: me, tx: (tat[uid]||{}).tx || "", cuaToi:true,
+    map[uid] = {pos: S.dat[uid], nv: me, ten: S.ten || "", tx: (tat[uid]||{}).tx || "", cuaToi:true,
       sua: !!(S.datKin && S.datKin[uid] !== S.dat[uid])};
   });
   return map;
@@ -1037,9 +1238,9 @@ function veSan(){
   const khay = $("#"+pre+"-khay");
   if(khay){
     const con = S.xap.filter(m=> S.dat[m.uid] === undefined);
-    khay.innerHTML = !tuongTac ? "" : `<div class="sec"><h3>Xấp mảnh của bạn
-        <span class="cnt">${con.length}/${S.xap.length} chưa đặt</span></h3>
-      <p class="hint">${con.length ? "Bấm một mảnh để cầm lên, rồi bấm vào ô số bạn muốn đặt." : "Đã đặt hết. Xem lại một lượt rồi nộp."}</p>
+    khay.innerHTML = !tuongTac ? "" : `<div class="sec"><h3>Số mảnh ghép đang có:
+        <span class="cnt">${con.length}/${S.xap.length}, chưa ghép</span></h3>
+      <p class="hint">${con.length ? "Chạm vào mảnh ghép rồi chạm vào ô thứ tự." : "Đã ghép hết. Xem lại một lượt rồi nộp."}</p>
       <div class="khay">${con.map(m=>`
         <button class="mn" data-manh="${m.uid}" aria-pressed="${m.uid===S.cam}" style="border-left-color:${me.hex}">
           <svg class="ic" style="color:${me.hex}"><use href="${me.sym}"/></svg>
@@ -1051,21 +1252,32 @@ function veSan(){
   if(slot){
     let h = `<div class="sec"><h3>Không gian câu trả lời
       <span class="cnt">${nThat} ô</span></h3>
-      <p class="hint">${xemDoi ? "Ô nào có chữ màu gì là của nhân vật màu đó." : "Bạn chỉ thấy mảnh của mình. Muốn biết ô nào còn trống thì phải hỏi to."}${S.vong === "mo" ? " Chữ đỏ gạch sóng là mảnh đặt lại ở vòng mở." : ""}</p>
+      <p class="hint">${xemDoi ? "Bạn nào nộp, đáp án hiện ngay kèm tên và hình nhân vật của bạn ấy — chữ màu gì là của nhân vật màu đó." : "Bạn chỉ thấy mảnh của mình. Muốn biết ô nào còn trống thì phải hỏi to."}${S.vong === "mo" ? " Chữ đỏ gạch sóng là mảnh đặt lại ở vòng mở." : ""}</p>
       <div class="slots">`;
+    /* không gian chung: tên + hình nhân vật của người nộp nằm ngoài số thứ tự, đầu mỗi đáp án */
+    const chip = c=>{
+      const ten2 = c.ten && c.ten !== c.nv.ten ? c.ten : "";
+      return `<span class="ai" style="color:${c.nv.hex}" title="${esc(c.nv.ten + (ten2 ? " · " + ten2 : ""))}">
+        <svg><use href="${c.nv.sym || "#i-giay"}"/></svg>
+        <span class="aw"><span class="an">${esc(c.nv.ten)}${c.cuaToi ? " (bạn)" : ""}</span>${ten2 ? `<span class="ah">${esc(ten2)}</span>` : ""}</span></span>`;
+    };
     for(let i=1;i<=nThat;i++){
       const co = Object.keys(map).filter(u=> map[u].pos === i);
       if(!co.length){
         h += `<button class="sl ${tuongTac && S.cam ? "can":""}" data-o="${i}" ${tuongTac?"":"disabled"}>
+          ${xemDoi ? `<span class="ais"><span class="ai trong">chưa ai nộp</span></span>` : ""}
           <span class="no">${i}</span><span class="body"><span class="em">${tuongTac && S.cam ? "đặt mảnh đang cầm vào đây" : "còn trống"}</span></span></button>`;
       } else {
         const dup = co.length > 1;
-        h += `<div class="sl full ${dup?"dup":""}" style="border-left-color:${map[co[0]].nv.hex}">
-          <span class="no">${i}</span><span class="body">` +
+        h += `<div class="sl full ${dup?"dup":""}" style="border-left-color:${map[co[0]].nv.hex}">` +
+          (xemDoi ? `<span class="ais">${co.map(u=>chip(map[u])).join("")}</span>` : "") +
+          `<span class="no">${i}</span><span class="body">` +
           co.map(u=>{ const c = map[u];
-            return `<span class="who" style="color:${c.nv.hex}">${esc(c.nv.ten)}${c.cuaToi?" · bạn":""}${c.sua?'<span class="but">bút đỏ · vòng mở</span>':""}</span>
-              <span class="tx${c.sua?" sua":""}" style="color:${c.nv.hex}">${esc(c.tx)}</span>` +
-              (c.cuaToi && tuongTac ? ` <button class="lift" data-nhac="${u}">nhấc ra</button>` : "");
+            const nhan = xemDoi
+              ? (c.sua ? `<span class="who"><span class="but" style="margin-left:0">bút đỏ · vòng mở</span></span>` : "")
+              : `<span class="who" style="color:${c.nv.hex}">${esc(c.nv.ten)}${c.cuaToi?" · bạn":""}${c.sua?'<span class="but">bút đỏ · vòng mở</span>':""}</span>`;
+            return `<span class="bl" style="display:block">${nhan}<span class="tx${c.sua?" sua":""}" style="color:${c.nv.hex}">${esc(c.tx)}</span>` +
+              (c.cuaToi && tuongTac ? ` <button class="lift" data-nhac="${u}">nhấc ra</button>` : "") + `</span>`;
           }).join("") +
           (dup ? `<span class="cha">Hai bạn cùng chọn ô này — phải nói chuyện để nhường nhau.</span>` : "") +
           `</span></div>`;
@@ -1079,11 +1291,9 @@ function veSan(){
   if(thung){
     const bo = Object.keys(map).filter(u=> map[u].pos === 0);
     thung.innerHTML = `<div class="thung ${tuongTac && S.cam ? "can":""}">
-      <h3>Thùng loại — nghi là mảnh giả <span class="cnt">${bo.length} mảnh</span></h3>
-      <p class="hint">${tuongTac
-        ? "Có " + bai.gia.length + " mảnh giả trong cả bộ. Ném đúng cả " + bai.gia.length + " thì nhóm được thưởng +2."
-        : "Những mảnh cả nhóm cho là giả."}</p>
-      ${tuongTac && S.cam ? `<button class="btn sm red" data-thung="1" style="margin-top:8px">Ném mảnh đang cầm vào thùng</button>` : ""}
+      <h3>Nơi chứa mảnh ghép “giả” <span class="cnt">${bo.length} mảnh</span></h3>
+      <p class="hint">Tìm và loại được toàn bộ ${bai.gia.length} mảnh — ${S.che === "nhom" ? "cả nhóm" : "bạn"} +2 điểm.</p>
+      ${tuongTac && S.cam ? `<button class="btn sm red" data-thung="1" style="margin-top:8px">Đưa mảnh đang cầm vào đây</button>` : ""}
       ${bo.length ? `<div class="khay">${bo.map(u=>{ const c = map[u];
         return `<button class="mn" ${c.cuaToi && tuongTac ? `data-nhac="${u}"` : "disabled"} style="border-left-color:${c.nv.hex}">
           <svg class="ic" style="color:${c.nv.hex}"><use href="${c.nv.sym||me.sym}"/></svg>
@@ -1175,6 +1385,7 @@ $("#g-cham").onclick = ()=>{
     moi[nv.id] = {van:S.van, nvId:nv.id, nvTen:nv.ten, hex:nv.hex, ten:nv.ten, dat};
   });
   if(loi){ $("#g-loi").textContent = loi; return; }
+  S.banTay = Object.assign({}, S.banTay, moi);
   S.banKhac = Object.assign({}, S.banKhac, moi);
   show("bang"); veSan();
 };
@@ -1236,7 +1447,7 @@ async function chotBai(){
       diemKin:(kqKin || kq).diem, toiDa:kq.toiDa, phut:S.phut, giay, buoi:bai.buoi, bai:bai.ten,
       danhHieu:kq.xl.dh, luc:Date.now(), van:S.van};
     try{ await DB.doc("bangvang/nhom"+S.doi).set(rec); }catch(e){}
-    try{ await DB.doc(goc()+"/kq/"+S.van).set({vt, vtKin, sua, giay, luc:Date.now()}); }catch(e){}
+    try{ await DB.doc(goc()+"/kq").set({van:S.van, vt, vtKin, sua, giay, luc:Date.now()}); }catch(e){}
   }
   hienKetQua(kq, giay, sua, kqKin);
 }
@@ -1321,7 +1532,8 @@ function veBangThanhTich(kq, giay, kqKin){
   try{ if(huyBang) huyBang(); }catch(e){}
   try{
     huyBang = DB.collection("bangvang").onSnapshot(snap=>{
-      const rs = (snap.docs||[]).map(d=>d.data()).filter(r=>r && r.ten);
+      const rs = (snap.docs||[]).map(d=>d.data())
+        .filter(r=>r && r.ten && r.luc && Date.now() - r.luc < 3*3600000);
       if(!rs.some(r=>r.doi === S.doi)) rs.push(toi);
       rs.sort((a,b)=> (b.diem-a.diem) || ((a.giay||0)-(b.giay||0)));
       el.innerHTML = bangHTML(rs);
