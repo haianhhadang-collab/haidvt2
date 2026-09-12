@@ -1,7 +1,589 @@
 <!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#A4161A">
+<title>Lúc đó Bác tên gì?</title>
+<style>
+:root{
+  --do:#A4161A; --do-dam:#6E0D10; --do-nen:#FBECEA;
+  --giay:#FFFDF9; --the:#FFFFFF; --hop:#F6F1EA; --vien:#E0D7CC;
+  --muc:#1F1F1F; --muc2:#6B625A;
+  --xanh:#2E7D32; --xanh-nen:#E8F2E9;
+  --vang:#B7791F; --vang-nen:#FBF3E2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--giay);color:var(--muc);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px;line-height:1.45;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.app{max-width:620px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+  padding:14px 15px calc(16px + env(safe-area-inset-bottom))}
+.man{display:none;flex:1;flex-direction:column}
+.man.on{display:flex}
+.rong{max-width:960px}
 
-<meta charset=utf-8>
-<title>Luc do Bac ten gi</title>
-<h1>Lúc đó Bác tên gì?</h1>
-<p>Đang đưa game lên. Tải file index.html thật đè lên trang này.</p>
+/* ---------- màn mở ---------- */
+.bia{justify-content:center;text-align:center}
+.bia .nhan{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muc2)}
+.bia h1{font-size:clamp(34px,9vw,46px);margin:8px 0 4px;color:var(--do);line-height:1.05}
+.bia .sub{font-size:16px;color:var(--muc2);margin-bottom:20px}
+.hai{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px}
+.hai .k{background:var(--hop);border:1.5px solid var(--vien);border-radius:15px;padding:14px 12px}
+.hai .k b{display:block;font-size:26px;color:var(--do);margin-bottom:2px}
+.hai .k span{font-size:13.5px;color:var(--muc2);line-height:1.35;display:block}
+.o-ten{display:flex;flex-direction:column;gap:7px;text-align:left;margin-bottom:16px}
+.o-ten label{font-size:13.5px;color:var(--muc2);font-weight:600}
+.o-ten .gy{font-size:13px;color:var(--muc2)}
+input,textarea{width:100%;padding:14px 15px;border:1.5px solid var(--vien);border-radius:13px;
+  font:inherit;background:var(--the);color:var(--muc)}
+input{font-weight:600}
+textarea{min-height:150px;font-size:14.5px;font-family:ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+.ghi{font-size:14px;color:var(--muc2);margin-top:14px}
+.gv-link{margin-top:22px;font-size:13.5px;color:var(--muc2);text-decoration:underline;background:none}
 
+/* ---------- nút to ---------- */
+.to{display:block;width:100%;background:var(--do);color:#fff;border-radius:15px;
+  padding:17px;font-size:19px;font-weight:700;text-align:center}
+.to:active{transform:scale(.985)}
+.to.phu{background:var(--the);color:var(--muc);border:1.5px solid var(--vien);margin-top:10px}
+.to.nho{padding:12px;font-size:16px}
+
+/* ---------- màn chơi ---------- */
+.dau{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.dau .stt{font-size:14px;font-weight:700;color:var(--muc2);letter-spacing:.04em}
+.dau .sp{flex:1}
+.dau .diem{font-size:15px;font-weight:800;color:var(--do);font-variant-numeric:tabular-nums}
+.dau .gio{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.dau .gio.gap{color:#C2410C}
+.thanh{height:8px;background:var(--vien);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.thanh i{display:block;height:100%;width:100%;background:var(--do)}
+.thanh i.gap{background:#D97706}
+.canh{font-size:15.5px;line-height:1.45;color:var(--muc2);border-left:4px solid var(--do);
+  padding:2px 0 2px 13px;margin-bottom:12px}
+.hoi{font-size:21px;font-weight:700;line-height:1.3;margin-bottom:16px}
+.dsp{display:grid;gap:10px}
+.dsp button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;
+  background:var(--the);border:1.8px solid var(--vien);border-radius:15px;padding:14px 15px;
+  font-size:17px;font-weight:600;line-height:1.3}
+.dsp button .k{width:34px;height:34px;flex:none;border-radius:10px;background:var(--hop);
+  color:var(--muc2);font-weight:800;font-size:16px;display:grid;place-items:center}
+.dsp button:active{border-color:var(--do)}
+.dsp button.dung{background:var(--xanh-nen);border-color:var(--xanh)}
+.dsp button.dung .k{background:var(--xanh);color:#fff}
+.dsp button.sai{background:var(--do-nen);border-color:var(--do)}
+.dsp button.sai .k{background:var(--do);color:#fff}
+.dsp button.mo{opacity:.4}
+.dsp.tb button{justify-content:center;font-size:21px;font-weight:800;padding:20px;text-align:center}
+.dsp.tb button .k{display:none}
+
+.bao{margin-top:14px;border-radius:15px;padding:14px 16px;border:1.5px solid var(--vien);background:var(--hop)}
+.bao.d{background:var(--xanh-nen);border-color:var(--xanh)}
+.bao.s{background:var(--do-nen);border-color:var(--do)}
+.bao .kq{display:flex;align-items:baseline;gap:9px;margin-bottom:7px}
+.bao .kq b{font-size:20px}
+.bao.d .kq b{color:var(--xanh)} .bao.s .kq b{color:var(--do)}
+.bao .kq span{font-size:14.5px;color:var(--muc2);margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
+.bao p{margin:0;font-size:15px;line-height:1.45}
+.bao .ng{margin-top:8px;font-size:12.5px;color:var(--muc2)}
+.tiep{margin-top:14px}
+
+/* ---------- màn kết ---------- */
+.ket{justify-content:center;text-align:center}
+.ket .ten-kq{font-size:17px;font-weight:700;color:var(--do-dam);margin-bottom:10px}
+.ket .tong{font-size:clamp(52px,15vw,74px);font-weight:800;color:var(--do);line-height:1;margin:6px 0}
+.ket .xl{font-size:20px;font-weight:700;margin-bottom:16px}
+.bo3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.bo3 .k{background:var(--hop);border:1.5px solid var(--vien);border-radius:14px;padding:12px 6px}
+.bo3 .k b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.bo3 .k span{font-size:12.5px;color:var(--muc2)}
+.ma{background:var(--do);color:#fff;border-radius:14px;padding:15px;font-size:16px;font-weight:700;
+  word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace}
+.ma-nhan{font-size:13px;color:var(--muc2);margin:12px 0 6px;text-align:left}
+.xem{margin-top:18px;text-align:left;display:grid;gap:9px}
+.xem .r{background:var(--hop);border:1.5px solid var(--vien);border-left-width:5px;border-radius:12px;padding:11px 13px;font-size:14.5px}
+.xem .r.d{border-left-color:var(--xanh)} .xem .r.s{border-left-color:var(--do)}
+.xem .r b{display:block;font-size:15px;margin-bottom:3px}
+.xem .r span{color:var(--muc2)}
+
+/* ---------- màn thống kê (giảng viên) ---------- */
+.tk h2{font-size:26px;margin:0 0 4px;color:var(--do)}
+.tk .dan{font-size:14.5px;color:var(--muc2);margin-bottom:14px}
+.tk .bo4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:16px 0}
+.tk .bo4 .k{background:var(--hop);border:1.5px solid var(--vien);border-radius:14px;padding:12px 6px;text-align:center}
+.tk .bo4 .k b{display:block;font-size:23px;font-variant-numeric:tabular-nums}
+.tk .bo4 .k span{font-size:12px;color:var(--muc2)}
+.tk h3{font-size:16px;margin:20px 0 9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muc2)}
+.cot{display:grid;gap:7px}
+.cot .r{display:flex;align-items:center;gap:10px;font-size:14.5px}
+.cot .r .n{width:52px;flex:none;font-weight:700;color:var(--muc2);font-size:13px}
+.cot .r .t{flex:1;height:26px;background:var(--hop);border-radius:7px;overflow:hidden;position:relative}
+.cot .r .t i{display:block;height:100%;background:var(--xanh);opacity:.75}
+.cot .r .t.kem i{background:var(--do)}
+.cot .r .v{width:74px;flex:none;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;font-size:13.5px}
+.xh{display:grid;gap:7px}
+.xh .r{display:flex;align-items:center;gap:11px;background:var(--hop);border:1.5px solid var(--vien);
+  border-radius:12px;padding:10px 14px;font-size:15.5px}
+.xh .r.top{background:var(--vang-nen);border-color:var(--vang)}
+.xh .r .h{width:30px;font-weight:800;color:var(--do);font-size:17px}
+.xh .r .tn{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xh .r .d{font-weight:800;font-variant-numeric:tabular-nums}
+.xh .r .g{width:62px;text-align:right;color:var(--muc2);font-size:13.5px;font-variant-numeric:tabular-nums}
+.canh-bao{background:var(--do-nen);border:1.5px solid var(--do);border-radius:13px;padding:12px 15px;
+  font-size:14.5px;margin-top:14px}
+.giai{display:grid;gap:9px}
+.giai .g{display:flex;align-items:center;gap:13px;border:1.8px solid var(--vien);background:var(--hop);
+  border-radius:14px;padding:12px 15px}
+.giai .g.v{background:var(--vang-nen);border-color:var(--vang)}
+.giai .g .hc{font-size:27px;flex:none;width:34px;text-align:center}
+.giai .g .n{flex:1}
+.giai .g .n b{display:block;font-size:16.5px}
+.giai .g .n span{font-size:13px;color:var(--muc2)}
+.giai .g .d{font-weight:800;font-variant-numeric:tabular-nums;font-size:16px;text-align:right}
+.nhomtk{display:grid;gap:7px}
+.nhomtk .r{display:flex;align-items:center;gap:11px;background:var(--hop);border:1.5px solid var(--vien);
+  border-radius:12px;padding:9px 14px;font-size:15px}
+.nhomtk .r.top{background:var(--vang-nen);border-color:var(--vang)}
+.nhomtk .r .tn{flex:1;font-weight:700}
+.nhomtk .r .s{color:var(--muc2);font-size:13.5px}
+.nhomtk .r .d{font-weight:800;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.tk .bo4{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<!-- ============ MÀN MỞ ============ -->
+<section class="man bia on" id="manBia">
+  <div class="nhan">POL1001 · Tư tưởng Hồ Chí Minh · buổi 2</div>
+  <h1>LÚC ĐÓ<br>BÁC TÊN GÌ?</h1>
+  <div class="sub">Hiểu thêm về Hồ Chí Minh</div>
+
+  <div class="hai">
+    <div class="k"><b>ĐÚNG</b><span>Mỗi câu đúng<br>100 điểm</span></div>
+    <div class="k"><b>NHANH</b><span>Trả lời càng sớm<br>thưởng càng cao</span></div>
+  </div>
+
+  <div class="o-ten">
+    <label for="inTen">Tên người chơi</label>
+    <input id="inTen" placeholder="3_Nguyễn Thị Lan" maxlength="32" autocomplete="off">
+    <div class="gy">Ghi <b>số nhóm</b>, gạch dưới, rồi <b>họ tên em</b> — ví dụ <b>3_Nguyễn Thị Lan</b>.</div>
+  </div>
+
+  <button class="to" id="btBatDau">Bắt đầu ▶</button>
+  <div class="ghi">Mỗi câu <b id="txtGiay">10</b> giây. Chạm vào đáp án là đồng hồ dừng ngay — chạm rồi
+    <b>không đổi lại được</b>. Hết giờ mà chưa chạm thì câu đó 0 điểm.</div>
+  <button class="gv-link" id="btGV">Thống kê lớp (dành cho giảng viên)</button>
+</section>
+
+<!-- ============ MÀN CHƠI ============ -->
+<section class="man" id="manChoi">
+  <div class="dau">
+    <div class="stt" id="txtStt">CÂU 1/10</div>
+    <div class="sp"></div>
+    <div class="diem" id="txtDiem">0 đ</div>
+    <div class="gio" id="txtGio">10</div>
+  </div>
+  <div class="thanh"><i id="thanhGio"></i></div>
+  <div class="canh" id="txtCanh"></div>
+  <div class="hoi" id="txtHoi"></div>
+  <div class="dsp" id="oDsp"></div>
+  <div id="oBao"></div>
+</section>
+
+<!-- ============ MÀN KẾT ============ -->
+<section class="man ket" id="manKet">
+  <div class="ten-kq" id="txtTenKQ"></div>
+  <div style="font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--muc2)">Tổng điểm</div>
+  <div class="tong" id="txtTong">0</div>
+  <div class="xl" id="txtXl"></div>
+
+  <div class="bo3">
+    <div class="k"><b id="kDung">0</b><span>câu đúng</span></div>
+    <div class="k"><b id="kGiay">0s</b><span>tổng thời gian</span></div>
+    <div class="k"><b id="kNhanh">0s</b><span>câu nhanh nhất</span></div>
+  </div>
+
+  <div class="ma-nhan"><b>Gửi kết quả:</b> chụp lại màn hình này rồi gửi Zalo cho <b>nhóm trưởng</b>.
+    Nhóm trưởng thống kê người trả lời tốt nhất của nhóm rồi gửi lên Zalo lớp.
+    Nếu điểm bằng nhau, ai nhanh hơn người đó thắng.</div>
+  <div class="ma" id="txtMa">—</div>
+
+  <button class="to phu" id="btXem">Xem lại 10 câu</button>
+  <button class="to phu" id="btChoiLai">Chơi lại</button>
+  <div class="xem" id="oXem" style="display:none"></div>
+</section>
+
+<!-- ============ MÀN THỐNG KÊ (GIẢNG VIÊN) ============ -->
+<section class="man tk" id="manTK">
+  <h2>Thống kê lớp</h2>
+  <div class="dan">Chép toàn bộ tin nhắn kết quả từ nhóm Zalo rồi dán vào ô dưới — mỗi em một dòng,
+    lẫn tên người gửi và giờ gửi cũng không sao, máy tự lọc.</div>
+  <textarea id="inDan" placeholder="3_Nguyễn Thị Lan|1420|8|63|1101101011&#10;1_Trần Văn Minh|980|6|71|1010010110"></textarea>
+  <button class="to nho" id="btTinh" style="margin-top:10px">Tính thống kê</button>
+  <div id="oKQ"></div>
+  <button class="to phu" id="btVeBia">◂ Về màn hình đầu</button>
+</section>
+
+</div>
+<script>
+const DATA = {"ten": "Lúc đó Bác tên gì?", "mo_ta": "Game mini cá nhân, 10 câu về cuộc đời và sự nghiệp Hồ Chí Minh, chơi trên điện thoại. Trộn hai dạng: 6 câu đoán tên gọi (4 phương án) và 4 câu phán đoán đúng/sai (hai nút Chính xác / Chưa đúng rồi). Chấm theo hai tiêu chí: đúng và nhanh.", "giay": 10, "cau": [{"loai": "ten", "canh": "Nghệ An, ngày 19 tháng 5 năm 1890. Một cậu bé chào đời trong gia đình cụ phó bảng Nguyễn Sinh Sắc và cụ Hoàng Thị Loan.", "hoi": "Tên cậu bé lúc đó là gì?", "opts": ["Nguyễn Tất Thành", "Nguyễn Sinh Cung", "Nguyễn Ái Quốc", "Nguyễn Sinh Khiêm"], "ans": 1, "cauchuyen": "Giáo trình ghi rõ: “Hồ Chí Minh (lúc nhỏ tên là Nguyễn Sinh Cung, sau đổi là Nguyễn Tất Thành) sinh ngày 19-5-1890, trong một gia đình khoa bảng.” Nguyễn Tất Thành là cái tên đến sau, khi đi học.", "nguon": "giao-trinh"}, {"loai": "ten", "canh": "Bến Nhà Rồng, ngày 5 tháng 6 năm 1911. Một thanh niên 21 tuổi xin làm phụ bếp trên tàu Amiral Latouche-Tréville để được đi.", "hoi": "Anh khai với chủ tàu tên là gì?", "opts": ["Nguyễn Tất Thành", "Nguyễn Ái Quốc", "Văn Ba", "Lý Thụy"], "ans": 2, "cauchuyen": "Anh Ba — hay Văn Ba — là cái tên trên sổ lương con tàu. Người rời bến với một cái tên không ai biết, và trở về sau 30 năm với một cái tên cả thế giới biết.", "nguon": "tieu-su"}, {"loai": "thatbia", "canh": "Trước khi xuống tàu ra đi tìm đường cứu nước, Người từng là thầy giáo ở Trường Dục Thanh, Phan Thiết.", "hoi": "Phát biểu trên chính xác hay chưa đúng?", "ans": true, "cauchuyen": "CHÍNH XÁC — năm 1910. Giáo trình chép: “Là thầy giáo ở Trường Dục Thanh, Phan Thiết, khi dạy học cũng như trong sinh hoạt, Hồ Chí Minh thường dành hết tâm huyết truyền thụ cho học sinh lòng yêu nước.”", "nguon": "giao-trinh"}, {"loai": "ten", "canh": "Paris, ngày 18 tháng 6 năm 1919. Bản Yêu sách của nhân dân An Nam được gửi tới Hội nghị Vécxây, đòi quyền tự do dân chủ cho nhân dân Việt Nam.", "hoi": "Bản Yêu sách ký tên ai?", "opts": ["Nguyễn Tất Thành", "Nguyễn Ái Quốc", "Hồ Chí Minh", "Nguyễn Sinh Cung"], "ans": 1, "cauchuyen": "Đây là lần đầu cái tên Nguyễn Ái Quốc xuất hiện — nghĩa là “Nguyễn yêu nước”. Giáo trình gọi đây là “tiếng nói chính nghĩa đầu tiên của đại biểu phong trào giải phóng dân tộc Việt Nam trên diễn đàn quốc tế”.", "nguon": "giao-trinh"}, {"loai": "thatbia", "canh": "Năm 1922, Người sáng lập báo Le Paria bằng tiếng Pháp, vừa làm chủ bút, tổng biên tập, vừa tự lo cả việc phát hành.", "hoi": "Phát biểu trên chính xác hay chưa đúng?", "ans": true, "cauchuyen": "CHÍNH XÁC. Giáo trình chép đúng như vậy: “Người vừa làm chủ bút, tổng biên tập và kiêm cả việc tổ chức phát hành báo đó trong nước Pháp và gửi đến các thuộc địa của Pháp.” Một tòa soạn một người.", "nguon": "giao-trinh"}, {"loai": "ten", "canh": "Hồng Kông, năm 1931. Bị nhà cầm quyền Anh bắt giam. Luật sư Frank Loseby đứng ra bào chữa và cứu được thân chủ khỏi bị trao cho Pháp.", "hoi": "Hồ sơ vụ án ghi tên bị cáo là gì?", "opts": ["Lý Thụy", "Tống Văn Sơ", "Thầu Chín", "Hồ Quang"], "ans": 1, "cauchuyen": "Tống Văn Sơ. Ba cái tên còn lại cũng đều là của Người, chỉ khác thời điểm: Lý Thụy ở Quảng Châu, Thầu Chín ở Xiêm, Hồ Quang ở Trung Quốc cuối những năm 1930.", "nguon": "tieu-su"}, {"loai": "thatbia", "canh": "Tác phẩm Đường cách mệnh được xuất bản lần đầu ở Paris, năm 1927.", "hoi": "Phát biểu trên chính xác hay chưa đúng?", "ans": false, "cauchuyen": "CHƯA ĐÚNG. Đúng năm 1927, nhưng xuất bản ở Quảng Châu, Trung Quốc — không phải Paris. Tác phẩm xuất bản ở Paris là Bản án chế độ thực dân Pháp, năm 1925.", "nguon": "giao-trinh"}, {"loai": "ten", "canh": "Pác Bó, Cao Bằng, đầu năm 1941. Vừa về nước sau 30 năm xa xứ, sống trong hang, bà con trong bản gọi là “ông ké”.", "hoi": "Bí danh của Người lúc đó là gì?", "opts": ["Già Thu", "Văn Ba", "Nguyễn Ái Quốc", "Hồ Quang"], "ans": 0, "cauchuyen": "Già Thu. Vài tháng sau, tháng 5/1941, chính tại Pác Bó, Người chủ trì Hội nghị Trung ương Đảng đặt nhiệm vụ giải phóng dân tộc lên hàng đầu — hội nghị mà các em sẽ học ở chương 2.", "nguon": "tieu-su"}, {"loai": "thatbia", "canh": "Năm 1934, Người trở lại Liên Xô và vào học Trường Quốc tế Lênin.", "hoi": "Phát biểu trên chính xác hay chưa đúng?", "ans": true, "cauchuyen": "CHÍNH XÁC. Sau đó Người còn làm nghiên cứu sinh tại Ban Sử, Viện Nghiên cứu các vấn đề dân tộc và thuộc địa của Quốc tế Cộng sản. Đây cũng là quãng thời gian Người “bị hiểu lầm về một số hoạt động thực tế và quan điểm cách mạng” — chữ của giáo trình.", "nguon": "giao-trinh"}, {"loai": "ten", "canh": "Câu cuối, và là câu bất ngờ nhất. Nguyễn Sinh Cung, Nguyễn Tất Thành, Văn Ba, Nguyễn Ái Quốc, Lý Thụy, Thầu Chín, Tống Văn Sơ, Hồ Quang, Già Thu, Hồ Chí Minh…", "hoi": "Cả đời hoạt động, Người dùng khoảng bao nhiêu tên gọi và bút danh?", "opts": ["Khoảng 30", "Khoảng 70", "Khoảng 170", "Khoảng 500"], "ans": 2, "cauchuyen": "Khoảng 170 — con số thường được dẫn là 175 tên gọi, bí danh và bút danh. Mỗi cái tên là một chặng đường, một nhiệm vụ, một lần phải giấu mình để đi tiếp. Mười câu vừa rồi mới chạm tới sáu cái.", "nguon": "tieu-su"}]};
+const CAU = DATA.cau, GIAY = DATA.giay;
+const DIEM_DUNG = 100, DIEM_NHANH = 100;
+const KY = ["A","B","C","D"];
+const $ = id => document.getElementById(id);
+
+let iCau = 0, tong = 0, soDung = 0, tongGiay = 0, nhanhNhat = 999;
+let conLai = GIAY, dongHo = null, moc = 0, daChon = false;
+let nhatKy = [], bit = [];
+
+$("txtGiay").textContent = GIAY;
+try{ const t = localStorage.getItem("hcm-ten-goi-ten"); if (t) $("inTen").value = t; }catch(e){}
+
+function beep(f, ms){
+  try{
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    const o = c.createOscillator(), g = c.createGain();
+    o.frequency.value = f; o.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(.12, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, c.currentTime + ms/1000);
+    o.start(); o.stop(c.currentTime + ms/1000);
+  }catch(e){}
+}
+function rung(v){ try{ navigator.vibrate && navigator.vibrate(v); }catch(e){} }
+
+function veGio(){
+  const s = Math.max(0, Math.ceil(conLai));
+  $("txtGio").textContent = s;
+  $("txtGio").className = "gio" + (s <= 3 ? " gap" : "");
+  const i = $("thanhGio");
+  i.style.width = Math.max(0, conLai / GIAY * 100) + "%";
+  i.className = s <= 3 ? "gap" : "";
+}
+function chay(){
+  moc = Date.now(); conLai = GIAY; veGio();
+  dongHo = setInterval(() => {
+    conLai = GIAY - (Date.now() - moc) / 1000;
+    veGio();
+    if (conLai <= 0){ dung(); chon(-1); }
+  }, 100);
+}
+function dung(){ clearInterval(dongHo); dongHo = null; }
+
+function veCau(){
+  const c = CAU[iCau], tb = c.loai === "thatbia";
+  daChon = false;
+  $("txtStt").textContent = "CÂU " + (iCau + 1) + "/" + CAU.length;
+  $("txtDiem").textContent = tong + " đ";
+  $("txtCanh").textContent = c.canh;
+  $("txtHoi").textContent = c.hoi;
+  $("oBao").innerHTML = "";
+  const o = $("oDsp");
+  o.className = "dsp" + (tb ? " tb" : "");
+  o.innerHTML = "";
+  (tb ? ["Chính xác", "Chưa đúng rồi"] : c.opts).forEach((t, k) => {
+    const b = document.createElement("button");
+    b.innerHTML = '<span class="k"></span><span class="t"></span>';
+    b.querySelector(".k").textContent = KY[k];
+    b.querySelector(".t").textContent = t;
+    b.onclick = () => chon(k);
+    o.appendChild(b);
+  });
+  window.scrollTo(0, 0);
+  chay();
+}
+
+function chon(k){
+  if (daChon) return;
+  daChon = true; dung();
+  const c = CAU[iCau], tb = c.loai === "thatbia";
+  const dapAn = tb ? (c.ans ? 0 : 1) : c.ans;
+  const giay = Math.min(GIAY, (Date.now() - moc) / 1000);
+  const dung_ = k === dapAn;
+
+  let d = 0;
+  if (dung_){
+    d = DIEM_DUNG + Math.round(DIEM_NHANH * Math.max(0, (GIAY - giay) / GIAY));
+    tong += d; soDung++;
+    if (giay < nhanhNhat) nhanhNhat = giay;
+    beep(880, 120); rung(40);
+  } else { beep(230, 200); rung([30, 60, 30]); }
+  tongGiay += giay;
+  bit.push(dung_ ? "1" : "0");
+  $("txtDiem").textContent = tong + " đ";
+
+  const nut = $("oDsp").children;
+  for (let j = 0; j < nut.length; j++){
+    if (j === dapAn) nut[j].classList.add("dung");
+    else if (j === k) nut[j].classList.add("sai");
+    else nut[j].classList.add("mo");
+    nut[j].onclick = null;
+  }
+
+  const ten = tb ? (c.ans ? "Chính xác" : "Chưa đúng rồi") : c.opts[c.ans];
+  nhatKy.push({ hoi: c.hoi, dapAn: ten, dung: dung_, giay: giay, d: d });
+
+  const bao = document.createElement("div");
+  bao.className = "bao " + (dung_ ? "d" : "s");
+  bao.innerHTML = '<div class="kq"><b></b><span></span></div><p></p><div class="ng"></div>'
+    + '<button class="to tiep"></button>';
+  bao.querySelector("b").textContent = k === -1 ? "Hết giờ" : (dung_ ? "Em trả lời đúng" : "Em trả lời sai");
+  bao.querySelector(".kq span").textContent = (dung_ ? "+" + d + " đ" : "0 đ") + "  ·  " + giay.toFixed(1) + "s";
+  bao.querySelector("p").textContent = c.cauchuyen;
+  bao.querySelector(".ng").textContent = c.nguon === "giao-trinh"
+    ? "Có trong giáo trình, chương 2."
+    : "Chi tiết tiểu sử — không có trong giáo trình, không ra thi.";
+  const bt = bao.querySelector(".tiep");
+  bt.textContent = iCau >= CAU.length - 1 ? "Xem kết quả ▶" : "Câu tiếp ▶";
+  bt.onclick = tiep;
+  $("oBao").appendChild(bao);
+  bao.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function tiep(){
+  if (iCau >= CAU.length - 1){ ketThuc(); return; }
+  iCau++; veCau();
+}
+
+function maKetQua(){
+  const ten = ($("inTen").value || "").trim().replace(/\|/g, "-") || "Không tên";
+  return ten + "|" + tong + "|" + soDung + "|" + Math.round(tongGiay) + "|" + bit.join("");
+}
+
+function tenHienThi(){
+  const raw = ($("inTen").value || "").trim();
+  const m = raw.match(/^(\d+)\s*[_\-–.·]?\s*(.+)$/);
+  return m ? "Nhóm: " + m[1] + " - " + m[2].trim() : (raw || "Chưa nhập tên");
+}
+
+function ketThuc(){
+  dung();
+  $("txtTenKQ").textContent = tenHienThi();
+  $("txtTong").textContent = tong;
+  $("kDung").textContent = soDung + "/" + CAU.length;
+  $("kGiay").textContent = Math.round(tongGiay) + "s";
+  $("kNhanh").textContent = nhanhNhat > 900 ? "—" : nhanhNhat.toFixed(1) + "s";
+  const tl = tong / (CAU.length * (DIEM_DUNG + DIEM_NHANH));
+  $("txtXl").textContent = tl >= .8 ? "Xuất sắc — vừa chắc vừa nhanh"
+    : tl >= .6 ? "Khá — chắc kiến thức, còn chậm"
+    : tl >= .4 ? "Tạm được — cần đọc thêm"
+    : "Cần ôn lại phần tiểu sử";
+  $("txtMa").textContent = maKetQua();
+
+  const o = $("oXem"); o.innerHTML = "";
+  nhatKy.forEach((n, k) => {
+    const d = document.createElement("div");
+    d.className = "r " + (n.dung ? "d" : "s");
+    d.innerHTML = "<b></b><span></span>";
+    d.querySelector("b").textContent = (k + 1) + ". " + n.hoi;
+    d.querySelector("span").textContent = "Đáp án: " + n.dapAn + "  ·  "
+      + (n.dung ? "đúng, " + n.giay.toFixed(1) + "s, +" + n.d + " đ" : "em trả lời sai");
+    o.appendChild(d);
+  });
+  o.style.display = "none";
+  $("btXem").textContent = "Xem lại 10 câu";
+  moMan("manKet");
+  window.scrollTo(0, 0);
+}
+
+function moMan(id){
+  ["manBia","manChoi","manKet","manTK"].forEach(m => $(m).classList.toggle("on", m === id));
+  $("app").classList.toggle("rong", id === "manTK");
+}
+
+/* ---------------- THỐNG KÊ CHO GIẢNG VIÊN ---------------- */
+function docDan(raw){
+  const re = /([^\s|][^|\n]{0,40})\|(\d{1,5})\|(\d{1,3})\|(\d{1,4})\|([01]{2,40})/g;
+  const ds = []; const daCo = {};
+  let m;
+  while ((m = re.exec(raw)) !== null){
+    const ten = m[1].trim();
+    const khoa = ten.toLowerCase();
+    const r = { ten: ten, diem: +m[2], dung: +m[3], giay: +m[4], bit: m[5] };
+    if (daCo[khoa] !== undefined){          // nộp nhiều lần: giữ điểm cao nhất
+      if (ds[daCo[khoa]].diem < r.diem) ds[daCo[khoa]] = r;
+    } else { daCo[khoa] = ds.length; ds.push(r); }
+  }
+  return ds;
+}
+
+function tinh(){
+  const ds = docDan($("inDan").value);
+  const o = $("oKQ"); o.innerHTML = "";
+  if (!ds.length){
+    o.innerHTML = '<div class="canh-bao">Không đọc được dòng kết quả nào. '
+      + 'Mỗi dòng phải có dạng <b>Nhóm_Tên|điểm|số câu đúng|giây|chuỗi 0-1</b>, ví dụ <b>3_Nguyễn Thị Lan|1420|8|63|1101101011</b>.</div>';
+    return;
+  }
+  ds.sort((a, b) => b.diem - a.diem || a.giay - b.giay);
+  const n = ds.length;
+  const tbDiem = Math.round(ds.reduce((s, r) => s + r.diem, 0) / n);
+  const tbDung = (ds.reduce((s, r) => s + r.dung, 0) / n);
+  const tbGiay = Math.round(ds.reduce((s, r) => s + r.giay, 0) / n);
+
+  const soCau = CAU.length;
+  const dungCau = new Array(soCau).fill(0);
+  ds.forEach(r => { for (let i = 0; i < soCau && i < r.bit.length; i++) if (r.bit[i] === "1") dungCau[i]++; });
+
+  const bo4 = document.createElement("div");
+  bo4.className = "bo4";
+  [[n, "em đã nộp"], [tbDiem, "điểm trung bình"], [tbDung.toFixed(1) + "/" + soCau, "câu đúng TB"],
+   [tbGiay + "s", "thời gian TB"]].forEach(([a, b]) => {
+    const k = document.createElement("div"); k.className = "k";
+    k.innerHTML = "<b></b><span></span>";
+    k.querySelector("b").textContent = a; k.querySelector("span").textContent = b;
+    bo4.appendChild(k);
+  });
+  o.appendChild(bo4);
+
+  /* ---- bảng thành tích ---- */
+  const hG = document.createElement("h3"); hG.textContent = "Bảng thành tích";
+  o.appendChild(hG);
+  const giai = document.createElement("div"); giai.className = "giai";
+
+  function themGiai(hc, ten, mo, diem, vang){
+    const g = document.createElement("div");
+    g.className = "g" + (vang ? " v" : "");
+    g.innerHTML = '<span class="hc"></span><span class="n"><b></b><span></span></span><span class="d"></span>';
+    g.querySelector(".hc").textContent = hc;
+    g.querySelector("b").textContent = ten;
+    g.querySelector(".n span").textContent = mo;
+    g.querySelector(".d").textContent = diem;
+    giai.appendChild(g);
+  }
+
+  const huy = ["🥇", "🥈", "🥉"], hang = ["Quán quân", "Á quân", "Hạng ba"];
+  ds.slice(0, 3).forEach((r, k) => {
+    themGiai(huy[k], r.ten, hang[k] + " · " + r.dung + "/" + soCau + " câu đúng · " + r.giay + "s",
+             r.diem + " đ", k === 0);
+  });
+
+  const NGUONG = Math.max(8, soCau - 2);
+  const duDieuKien = ds.filter(r => r.dung >= NGUONG);
+  const nhanh = (duDieuKien.length ? duDieuKien : ds).slice()
+                  .sort((a, b) => a.giay - b.giay)[0];
+  if (nhanh){
+    themGiai("⚡", nhanh.ten,
+      "Tay nhanh nhất" + (duDieuKien.length ? " (trong số các em đúng từ " + NGUONG + "/" + soCau + ")" : "")
+      + " · " + nhanh.dung + "/" + soCau + " câu đúng",
+      nhanh.giay + "s", false);
+  }
+
+  const tuyetDoi = ds.filter(r => r.dung === soCau);
+  if (tuyetDoi.length){
+    themGiai("🎯", tuyetDoi.map(r => r.ten).join(", "),
+             "Chính xác tuyệt đối — đúng cả " + soCau + " câu",
+             tuyetDoi.length + " em", false);
+  }
+  o.appendChild(giai);
+
+  /* ---- theo nhóm (tên người chơi có dạng Nhóm_Tên) ---- */
+  const nhom = {};
+  ds.forEach(r => {
+    const m = r.ten.match(/^\s*(?:nhóm\s*)?([0-9A-Za-z]{1,6})\s*[_\-.]/i);
+    if (!m) return;
+    const k = m[1].toUpperCase();
+    (nhom[k] = nhom[k] || []).push(r);
+  });
+  const dsNhom = Object.keys(nhom).map(k => ({
+    ten: k,
+    so: nhom[k].length,
+    tb: Math.round(nhom[k].reduce((s, r) => s + r.diem, 0) / nhom[k].length)
+  })).sort((a, b) => b.tb - a.tb);
+  if (dsNhom.length > 1){
+    const hN = document.createElement("h3"); hN.textContent = "Theo nhóm — điểm trung bình";
+    o.appendChild(hN);
+    const bn = document.createElement("div"); bn.className = "nhomtk";
+    dsNhom.forEach((n2, k) => {
+      const r = document.createElement("div");
+      r.className = "r" + (k === 0 ? " top" : "");
+      r.innerHTML = '<span class="tn"></span><span class="s"></span><span class="d"></span>';
+      r.querySelector(".tn").textContent = "Nhóm " + n2.ten;
+      r.querySelector(".s").textContent = n2.so + " em nộp";
+      r.querySelector(".d").textContent = n2.tb + " đ";
+      bn.appendChild(r);
+    });
+    o.appendChild(bn);
+  }
+
+  const h1 = document.createElement("h3"); h1.textContent = "Tỷ lệ đúng từng câu";
+  o.appendChild(h1);
+  const cot = document.createElement("div"); cot.className = "cot";
+  dungCau.forEach((v, i) => {
+    const pc = Math.round(v / n * 100);
+    const r = document.createElement("div"); r.className = "r";
+    r.innerHTML = '<span class="n"></span><span class="t"><i></i></span><span class="v"></span>';
+    r.querySelector(".n").textContent = "Câu " + (i + 1);
+    r.querySelector(".t").className = "t" + (pc < 50 ? " kem" : "");
+    r.querySelector("i").style.width = pc + "%";
+    r.querySelector(".v").textContent = pc + "%  (" + v + "/" + n + ")";
+    cot.appendChild(r);
+  });
+  o.appendChild(cot);
+
+  const kem = dungCau.map((v, i) => ({ i: i, pc: v / n }))
+                     .sort((a, b) => a.pc - b.pc).slice(0, 2)
+                     .filter(x => x.pc < .6);
+  if (kem.length){
+    const cb = document.createElement("div"); cb.className = "canh-bao";
+    cb.innerHTML = "<b>Cần chốt lại:</b> " + kem.map(x =>
+      "câu " + (x.i + 1) + " (" + Math.round(x.pc * 100) + "% đúng) — " + CAU[x.i].hoi).join("; ");
+    o.appendChild(cb);
+  }
+
+  const h2 = document.createElement("h3"); h2.textContent = "Xếp hạng";
+  o.appendChild(h2);
+  const xh = document.createElement("div"); xh.className = "xh";
+  ds.forEach((r, k) => {
+    const d = document.createElement("div");
+    d.className = "r" + (k < 3 ? " top" : "");
+    d.innerHTML = '<span class="h"></span><span class="tn"></span><span class="d"></span><span class="g"></span>';
+    d.querySelector(".h").textContent = k + 1;
+    d.querySelector(".tn").textContent = r.ten;
+    d.querySelector(".d").textContent = r.diem + " đ";
+    d.querySelector(".g").textContent = r.dung + "/" + soCau + " · " + r.giay + "s";
+    xh.appendChild(d);
+  });
+  o.appendChild(xh);
+
+  const bt = document.createElement("button");
+  bt.className = "to nho"; bt.style.marginTop = "16px";
+  bt.textContent = "Tải bảng điểm .csv";
+  bt.onclick = () => {
+    let csv = "Hang,Ten,Diem,So cau dung,Tong giay,"
+      + CAU.map((c, i) => "Cau " + (i + 1)).join(",") + "\n";
+    ds.forEach((r, k) => {
+      csv += [k + 1, '"' + r.ten.replace(/"/g, "'") + '"', r.diem, r.dung, r.giay]
+        .concat(CAU.map((c, i) => r.bit[i] === "1" ? 1 : 0)).join(",") + "\n";
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }));
+    a.download = "thong-ke-luc-do-bac-ten-gi.csv";
+    a.click();
+  };
+  o.appendChild(bt);
+}
+
+/* ---------------- nút ---------------- */
+$("btBatDau").onclick = () => {
+  const t = ($("inTen").value || "").trim();
+  if (!t){ $("inTen").focus(); $("inTen").style.borderColor = "var(--do)"; return; }
+  try{ localStorage.setItem("hcm-ten-goi-ten", t); }catch(e){}
+  iCau = 0; tong = 0; soDung = 0; tongGiay = 0; nhanhNhat = 999; nhatKy = []; bit = [];
+  moMan("manChoi"); veCau();
+};
+$("btXem").onclick = () => {
+  const o = $("oXem"), an = o.style.display === "none";
+  o.style.display = an ? "grid" : "none";
+  $("btXem").textContent = an ? "Ẩn phần xem lại" : "Xem lại 10 câu";
+};
+$("btChoiLai").onclick = () => moMan("manBia");
+$("btGV").onclick = () => moMan("manTK");
+$("btVeBia").onclick = () => moMan("manBia");
+$("btTinh").onclick = tinh;
+if (location.hash === "#gv") moMan("manTK");
+</script>
+</body>
+</html>
