@@ -1,0 +1,1554 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Đi Tìm Liên Kết — minigame xếp lại thứ tự đáp án cho môn Tư tưởng Hồ Chí Minh (POL1001). Bốn nhóm, mỗi nhóm 6 người cầm máy, đội trưởng giữ không gian câu trả lời chung. Vòng kín 12 phút, vòng mở 2 phút sửa bằng bút đỏ, tối đa 11 điểm.">
+<meta name="theme-color" content="#F0F1EC">
+<style>*{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Đi Tìm Liên Kết</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --giay:#F0F1EC; --the:#FBFBF7; --the2:#E7EAE1; --chim:#DFE3D8;
+  --muc:#1B3350; --muc2:#4E657E; --muc3:#8496A6; --vien:#D1D6CA;
+  --vang:#E8B71E; --vang-nen:#F8EDBE;
+  --do:#CE4132; --do-nen:#F6DDD8;
+  --bang:#2F6B52; --bang-nen:#DDEAE1; --den:#12271E;
+  --d1:#C43D2E; --d2:#0E9488; --d3:#C79413; --d4:#7B3FA0;
+  --r:12px; --bong:0 1px 2px rgba(27,51,80,.06),0 10px 26px -16px rgba(27,51,80,.28);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --giay:#121922; --the:#1B2531; --the2:#222D3A; --chim:#161F29;
+  --muc:#E7EEF5; --muc2:#A5B7C7; --muc3:#718597; --vien:#2B3947;
+  --vang:#F6CD44; --vang-nen:#3C3418; --do:#F2705F; --do-nen:#3A211D;
+  --bang:#5CBF90; --bang-nen:#163024; --den:#0A1811;
+  --d1:#D94D3C; --d2:#14A89A; --d3:#D9A61E; --d4:#9159B8;
+  --bong:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --giay:#121922; --the:#1B2531; --the2:#222D3A; --chim:#161F29;
+  --muc:#E7EEF5; --muc2:#A5B7C7; --muc3:#718597; --vien:#2B3947;
+  --vang:#F6CD44; --vang-nen:#3C3418; --do:#F2705F; --do-nen:#3A211D;
+  --bang:#5CBF90; --bang-nen:#163024; --den:#0A1811;
+  --d1:#D94D3C; --d2:#14A89A; --d3:#D9A61E; --d4:#9159B8;
+  --bong:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--giay);color:var(--muc);
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55}
+h1,h2,h3{margin:0;font-family:"Baloo 2","Be Vietnam Pro",system-ui,sans-serif;font-weight:700;line-height:1.15;text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+p{margin:0} button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--vang);outline-offset:2px;border-radius:5px}
+.page{max-width:820px;margin:0 auto;padding:0 16px 90px}
+.wide{max-width:1080px}
+.eyebrow{font-family:"Baloo 2",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--muc3)}
+.muted{color:var(--muc2)} .small{font-size:13px} .tiny{font-size:12px}
+.screen{display:none} .screen.on{display:block}
+.stack{display:flex;flex-direction:column;gap:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+.card{background:var(--the);border:1px solid var(--vien);border-radius:var(--r);padding:16px}
+.btn{background:var(--muc);color:var(--giay);border:0;border-radius:9px;padding:12px 18px;
+  font-family:"Baloo 2",sans-serif;font-weight:700;font-size:17px}
+.btn:hover{filter:brightness(1.12)} .btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.btn.g{background:transparent;color:var(--muc);border:1.5px solid var(--vien)}
+.btn.g:hover{border-color:var(--muc3);filter:none}
+.btn.sm{padding:7px 13px;font-size:14.5px;border-radius:7px}
+.btn.w{width:100%}
+.btn.red{background:var(--do)}
+input,select{background:var(--the);border:1.5px solid var(--vien);color:var(--muc);
+  border-radius:8px;padding:10px 12px;font:inherit;width:100%}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muc2);font-weight:500}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px}
+
+/* ---- đầu trang ---- */
+.top{display:flex;align-items:center;gap:12px;padding:16px 0;flex-wrap:wrap}
+.top h1{font-size:clamp(24px,5vw,34px)}
+.crumb{font-size:12.5px;color:var(--muc3)}
+
+/* ---- chọn thẻ lớn ---- */
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.pick{background:var(--the);border:1.5px solid var(--vien);border-radius:var(--r);padding:16px;text-align:left;display:flex;gap:13px;align-items:flex-start}
+.pick:hover{border-color:var(--muc3)}
+.pick svg{width:46px;height:46px;flex:none}
+.pick .t{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:19px}
+.pick .d{font-size:13px;color:var(--muc2);margin-top:2px}
+
+/* ---- đội ---- */
+.teams{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.team{background:var(--the);border:1.5px solid var(--vien);border-radius:10px;padding:9px 4px;text-align:center;position:relative}
+.team[aria-pressed="true"]{border-color:currentColor;border-width:2.5px;background:var(--the2)}
+.team svg{width:38px;height:38px}
+.team .vno{position:absolute;left:0;right:0;top:14px;text-align:center;padding-left:4px;
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:11px;color:#1B3350}
+.team .tn{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:13.5px;color:var(--muc);margin-top:1px}
+
+.nvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px}
+.nv{background:var(--the);border:1.5px solid var(--vien);border-radius:10px;padding:10px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:2px}
+.nv[aria-pressed="true"]{border-color:var(--muc);border-width:2.5px;background:var(--the2)}
+.nv svg{width:40px;height:40px;display:block;flex:none}
+.nv .nvt{display:block;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:13px;line-height:1.15;color:var(--muc)}
+.nv .nvm{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muc3)}
+.nv.truong{border-color:var(--vang);background:var(--vang-nen)}
+.nv:disabled{opacity:.55}
+
+/* ---- khay mảnh · ô trống · thùng loại ---- */
+.sec{margin-top:16px}
+.sec h3{font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec .cnt{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muc3);font-weight:500}
+.sec .hint{font-size:12.5px;color:var(--muc3);margin-top:3px}
+
+.khay{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.mn{display:flex;gap:9px;align-items:flex-start;width:100%;text-align:left;
+  background:var(--the);border:1.5px solid var(--vien);border-left-width:5px;border-radius:9px;padding:9px 10px}
+.mn:hover{border-color:var(--muc3)}
+.mn[aria-pressed="true"]{border-color:var(--muc);box-shadow:0 0 0 2.5px var(--vang)}
+.mn .ic{width:24px;height:24px;flex:none;margin-top:1px}
+.mn .tx{flex:1;min-width:0;font-size:14px;line-height:1.42}
+.mn .who{display:block;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:11.5px;
+  letter-spacing:.04em;margin-bottom:2px}
+
+.held{position:sticky;top:52px;z-index:19;display:flex;gap:9px;align-items:center;
+  background:var(--vang-nen);border:2px solid var(--vang);border-radius:10px;padding:9px 12px;margin-top:11px}
+.held svg{width:24px;height:24px;flex:none}
+.held .t{flex:1;min-width:0;font-size:13.5px;line-height:1.35}
+.held .lb{display:block;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:11px;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--muc3)}
+.held button{background:transparent;border:1.5px solid var(--vien);border-radius:7px;padding:5px 10px;font-size:12.5px;flex:none}
+
+.slots{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.sl{display:flex;gap:9px;align-items:flex-start;width:100%;text-align:left;
+  border-radius:9px;padding:8px 10px;border:1.5px dashed var(--vien);background:transparent}
+.sl .no{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;width:24px;flex:none;
+  text-align:center;color:var(--muc3);padding-top:2px}
+.sl .body{flex:1;min-width:0}
+.sl .em{font-size:13px;color:var(--muc3);font-style:italic}
+.sl.full{border-style:solid;background:var(--the);border-left-width:5px}
+.sl.mine{box-shadow:inset 0 0 0 1px var(--vien)}
+.sl.can:hover{border-color:var(--vang);background:var(--vang-nen)}
+.sl.doi{border-style:solid;background:var(--the2)}
+.sl .who{display:block;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.04em;margin-bottom:2px}
+.sl .tx{font-size:13.8px;line-height:1.42}
+.sl.dup{border-color:var(--do);background:var(--do-nen)}
+.sl .cha{display:block;font-size:11.5px;color:var(--do);font-weight:600;margin-top:3px}
+.sl .lift{background:none;border:0;padding:2px 0;font-size:12px;color:var(--muc3);text-decoration:underline}
+/* người nộp — nằm ngoài số thứ tự, đầu mỗi đáp án */
+.sl .ais{flex:none;width:92px;display:flex;flex-direction:column;gap:6px;align-self:stretch;justify-content:flex-start;
+  padding-right:8px;border-right:1px dashed var(--vien)}
+.sl .ai{display:flex;align-items:center;gap:6px;min-width:0}
+.sl .ai svg{width:24px;height:24px;flex:none}
+.sl .ai .aw{display:flex;flex-direction:column;min-width:0}
+.sl .ai .an{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:11.5px;line-height:1.1;overflow-wrap:anywhere}
+.sl .ai .ah{font-size:10.5px;line-height:1.15;color:var(--muc2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl .ai.trong{color:var(--muc3);font-size:11px;font-style:italic}
+.sl .bl+.bl{margin-top:6px;padding-top:6px;border-top:1px dashed var(--vien)}
+@media (max-width:420px){ .sl .ais{width:76px} .sl .ai svg{width:20px;height:20px} .sl .ai .an{font-size:10.5px} }
+.netdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--muc3)}
+.netdot.on{background:var(--bang)} .netdot.dang{background:var(--vang)}
+
+.thung{border:1.5px dashed var(--do);background:var(--do-nen);border-radius:10px;padding:11px 12px;margin-top:14px}
+.thung h3{font-size:15px;color:var(--do);display:flex;align-items:center;gap:8px}
+.thung .khay{margin-top:8px}
+.thung .mn{background:var(--the);opacity:.9}
+.thung.can:hover{border-style:solid}
+
+/* ---- dàn nhân vật · tiến độ ---- */
+.dn{display:flex;flex-wrap:wrap;gap:7px}
+.dnv{display:inline-flex;align-items:center;gap:6px;background:var(--the);border:1.5px solid var(--vien);
+  border-radius:100px;padding:4px 11px 4px 5px;font-size:12.5px}
+.dnv svg{width:22px;height:22px;flex:none}
+.dnv .nm{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:12.5px;color:var(--muc)}
+.dnv .st{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muc3)}
+.dnv.xong{border-color:var(--bang);background:var(--bang-nen)}
+.dnv.xong .st{color:var(--bang)}
+
+/* ---- băng chặng ---- */
+.chang{display:flex;align-items:center;gap:11px;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;
+  position:sticky;top:0;z-index:20}
+.chang svg{width:26px;height:26px;flex:none}
+.chang.c1{background:var(--bang-nen);color:var(--bang)}
+.chang.c2{background:var(--do-nen);color:var(--do)}
+.chang.c3{background:var(--vang-nen);color:var(--muc)}
+.chang .clk{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:20px;margin-left:auto}
+
+/* ---- câu hỏi ---- */
+.q{background:var(--den);color:#EAF3ED;border-radius:var(--r);padding:15px 17px;border:5px solid #6B4A2A;margin-top:13px}
+.q .lb{font-family:"Baloo 2",sans-serif;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:#8FB3A2}
+.q .tx{font-size:16px;margin-top:5px;line-height:1.45}
+
+/* ---- mảnh ---- */
+.zone{margin-top:14px}
+.zone h3{font-size:16px;display:flex;align-items:center;gap:8px}
+.zone .cnt{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muc3);font-weight:500}
+.pieces{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.pc{display:flex;gap:9px;align-items:flex-start;background:var(--the);border:1.5px solid var(--vien);
+  border-radius:9px;padding:9px 10px}
+.pc.out{background:var(--the2);opacity:.75}
+.pc.edited{box-shadow:inset 3px 0 0 var(--do)}
+.pc .pos{width:44px;flex:none;display:flex;flex-direction:column;align-items:center;gap:3px}
+.pc .posn{width:42px;text-align:center;padding:5px 2px;font-family:"IBM Plex Mono",monospace;font-weight:600}
+.pc .lab{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muc3)}
+.pc .tx{flex:1;min-width:0;font-size:14px;line-height:1.42}
+.pc .ops{display:flex;flex-direction:column;gap:3px;flex:none}
+.pc .ops button{background:var(--the2);border:0;border-radius:6px;width:30px;height:23px;font-size:12px;line-height:1;color:var(--muc2)}
+.pc .ops button:hover{background:var(--vien)}
+.pc .kill{background:var(--do-nen)!important;color:var(--do)!important;height:30px!important;font-size:14px!important}
+.pc .back{background:var(--bang-nen)!important;color:var(--bang)!important;height:30px!important;font-size:11px!important;width:auto!important;padding:0 8px}
+
+/* ---- mã ---- */
+.macode{font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:.1em;
+  font-size:clamp(26px,7vw,42px);color:var(--do);text-align:center;padding:14px 0}
+.codebox{background:var(--vang-nen);border-radius:10px;padding:14px 16px;text-align:center}
+.codebox .cd{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:clamp(22px,6vw,34px);letter-spacing:.06em}
+
+/* ---- bảng ---- */
+.tw{overflow-x:auto;border:1px solid var(--vien);border-radius:var(--r);background:var(--the);margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-family:"Baloo 2",sans-serif;font-weight:600;font-size:11.5px;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--muc3);padding:9px 11px;border-bottom:1.5px solid var(--vien);white-space:nowrap}
+td{padding:8px 11px;border-bottom:1px solid var(--vien);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---- bảng thành tích ---- */
+table.bt{min-width:0}
+table.bt .nhom{display:flex;align-items:center;gap:8px;white-space:nowrap}
+table.bt .nhom .ch{width:12px;height:12px;border-radius:3px;flex:none}
+table.bt .to{display:block;font-size:12px;color:var(--muc3);margin-top:1px;white-space:nowrap}
+
+/* ---- kết quả ---- */
+.hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--the);
+  border:1.5px solid var(--vang);border-radius:var(--r);padding:18px}
+.hero svg{width:58px;height:58px;flex:none}
+.hero .big{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:44px;line-height:1;color:var(--vang)}
+.hero .dh{font-family:"Baloo 2",sans-serif;font-weight:700;font-size:26px}
+.line{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--vien);font-size:13.5px}
+.line:last-child{border-bottom:0}
+.line .m{font-family:"IBM Plex Mono",monospace;font-size:12px;width:30px;flex:none;color:var(--muc3);padding-top:2px}
+.ok{color:var(--bang)} .bad{color:var(--do)}
+/* bút đỏ — mảnh đặt lại ở vòng mở */
+.sua{color:var(--do)!important;text-decoration:underline wavy var(--do);text-decoration-thickness:1px;text-underline-offset:3px}
+.but{display:inline-block;margin-left:7px;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--do);white-space:nowrap;vertical-align:1px}
+.note{background:var(--the2);border-radius:9px;padding:12px 14px;font-size:13.5px;color:var(--muc2);margin-top:12px}
+.note b{color:var(--muc);font-weight:600}
+.warn{background:var(--vang-nen);color:var(--muc);border-radius:9px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.badge{font-size:11.5px;font-family:"Baloo 2",sans-serif;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;background:var(--the2);color:var(--muc2)}
+.rolechip{display:inline-flex;align-items:center;gap:9px;background:var(--the);border:1.5px solid var(--muc);
+  border-radius:100px;padding:4px 14px 4px 5px}
+.rolechip .av{width:32px;height:32px;border-radius:50%;background:var(--chim);display:grid;place-items:center;flex:none}
+.rolechip .av svg{width:25px;height:25px}
+.rolechip .r1{display:block;font-size:10.5px;color:var(--muc3);letter-spacing:.08em;text-transform:uppercase;font-family:"Baloo 2",sans-serif;font-weight:600}
+.rolechip .r2{display:block;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:15px;line-height:1.15}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<script>
+const BAI = [{"id":"b2","buoi":2,"chude":"01","ten":"Khái niệm và ý nghĩa học tập môn học","hoi":"Trình bày và phân tích khái niệm “Tư tưởng Hồ Chí Minh” và ý nghĩa của việc học tập môn học.","that":[["Nêu và phân tích khái niệm “TƯ TƯỞNG HỒ CHÍ MINH” (Đại hội XI của Đảng Cộng sản Việt Nam, năm 2011)","3,0 đ",0],["…là một hệ thống quan điểm toàn diện và sâu sắc về những vấn đề cơ bản của cách mạng Việt Nam","",1],["…kết quả của sự vận dụng và phát triển sáng tạo chủ nghĩa Mác – Lênin vào điều kiện cụ thể của nước ta","",1],["…kế thừa và phát triển các giá trị truyền thống tốt đẹp của dân tộc, tiếp thu tinh hoa văn hóa nhân loại","",1],["…là tài sản tinh thần vô cùng to lớn và quý giá của Đảng và dân tộc ta, mãi mãi soi đường cho sự nghiệp cách mạng của nhân dân ta giành thắng lợi","",1],["Phân tích Ý NGHĨA của việc học tập môn học Tư tưởng Hồ Chí Minh","2,0 đ",0],["Góp phần nâng cao NĂNG LỰC TƯ DUY LÝ LUẬN","0,75 đ",1],["Giáo dục và định hướng thực hành ĐẠO ĐỨC CÁCH MẠNG, củng cố niềm tin khoa học gắn liền với trau dồi tình cảm cách mạng, bồi dưỡng lòng yêu nước","0,75 đ",1],["Xây dựng, rèn luyện PHƯƠNG PHÁP VÀ PHONG CÁCH CÔNG TÁC","0,50 đ",1]],"gia":[["…kết quả của sự vận dụng NGUYÊN VẸN chủ nghĩa Mác – Lênin vào điều kiện cụ thể của nước ta","Sai một chữ then chốt. Nguyên văn là “vận dụng và phát triển SÁNG TẠO”. Chữ “sáng tạo” chính là chỗ khẳng định Hồ Chí Minh không sao chép."],["…là tài sản tinh thần VÔ GIÁ của RIÊNG Đảng Cộng sản Việt Nam","Sai hai chỗ. Đúng là “vô cùng to lớn và quý giá” và “của Đảng VÀ DÂN TỘC TA”. Chữ “riêng” làm sai hẳn bản chất."],["Góp phần nâng cao NĂNG LỰC THỰC HÀNH NGHỀ NGHIỆP cho sinh viên","Ý bịa. Nghe rất hợp lý nhưng ba ý nghĩa trong giáo trình là tư duy lý luận — đạo đức — phương pháp và phong cách công tác."],["Khái niệm “Tư tưởng Hồ Chí Minh” được ĐẠI HỘI IX của Đảng (năm 2001) nêu ra","Sai xuất xứ. Đại hội IX (2001) có nêu một khái niệm rất giống, nhưng THIẾU VẾ THỨ TƯ. Bản đang dùng là của Đại hội XI (2011)."]],"phut":12},{"id":"b3","buoi":3,"chude":"02","ten":"Cơ sở thực tiễn Việt Nam cuối XIX – đầu XX","hoi":"Phân tích cơ sở thực tiễn hình thành tư tưởng Hồ Chí Minh — phần Việt Nam.","that":[["Thực tiễn Việt Nam cuối thế kỷ XIX – đầu thế kỷ XX","2,5 đ",0],["Xã hội Việt Nam thay đổi","1,5 đ",1],["Việt Nam từ một nước phong kiến độc lập trở thành nước thuộc địa nửa phong kiến","0,5 đ",0],["Xuất hiện giai tầng mới bên cạnh tồn tại giai cấp cũ","0,5 đ",0],["Bên cạnh mâu thuẫn cũ, xuất hiện mâu thuẫn mới","0,5 đ",0],["Phong trào đấu tranh giải phóng dân tộc theo khuynh hướng phong kiến và dân chủ tư sản đều bị thất bại","1,0 đ",1],["Phong trào theo khuynh hướng phong kiến lần lượt thất bại (Các phong trào do: Trương Định, Nguyễn Trung Trực, Trần Tấn, Đặng Như Mai, Nguyễn Thiện Thuật,… ; Hoàng Hoa Thám lãnh đạo)","0,5 đ",0],["Phong trào yêu nước theo khuynh hướng tư sản, tiêu biểu phong trào của Phan Bội Châu, Phan Chu Trinh, …","0,5 đ",0]],"gia":[["Nói đi đôi với làm, nêu gương về đạo đức.","Ý này có thật trong đáp án — nhưng thuộc buổi 11, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Chủ nghĩa Mác – Lênin","Ý này có thật trong đáp án — nhưng thuộc buổi 4, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Đội ngũ đảng viên phải luôn luôn thấm nhuần đạo đức cách mạng, ra sức tu dưỡng, rèn luyện, suốt đời phấn đấu cho lợi ích của dân, của nước","Ý này có thật trong đáp án — nhưng thuộc buổi 9, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Tư túng, chia rẽ, kiêu ngạo","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":8},{"id":"b4","buoi":4,"chude":"02","ten":"Cơ sở thực tiễn thế giới và cơ sở lý luận","hoi":"Phân tích cơ sở thực tiễn thế giới và cơ sở lý luận hình thành tư tưởng Hồ Chí Minh.","that":[["Thực tiễn thế giới cuối thế kỷ XIX – đầu thế kỷ XX","2,5 đ",0],["Sự ra đời của chủ nghĩa đế quốc và hệ thống thuộc địa","0,75 đ",1],["Thế giới xuất hiện mâu thuẫn mới (cùng mâu thuẫn cũ vốn có trong các nước tư bản)","0,5 đ",1],["Thắng lợi của Cách mạng tháng Mười Nga (1917)","0,75 đ",1],["Sự ra đời của Quốc tế cộng sản 3 (2/3/1919)","0,5 đ",1],["Trình bày cơ sở lý luận hình thành tư tưởng Hồ Chí Minh","3,0 đ",0],["Giá trị truyền thống tốt đẹp của dân tộc Việt Nam","1,0 đ",1],["Tinh hoa văn hóa nhân loại","1,0 đ",1],["Chủ nghĩa Mác – Lênin","1,0 đ",1],["Chủ nghĩa Mác – Lênin là tiền đề lý luận quan trọng nhất, có vai trò quyết định trong việc hình thành tư tưởng Hồ Chí Minh.","1,0 đ",0],["Vì: Trên cơ sở lập trường, quan điểm và phương pháp của CN Mác – Lênin, Hồ Chí Minh đã triệt để kế thừa, đổi mới, phát triển những giá trị truyền thống tốt đẹp của dân tộc Việt Nam, tinh hoa văn hóa nhân loại, kết hợp với thực tiễn cách mạng Việt Nam và thế giới, hình thành nên một hệ thống các quan điểm cơ bản, toàn diện về cách mạng Việt Nam.","1,0 đ",0]],"gia":[["Quan điểm của Quốc tế Cộng sản coi nhẹ năng lực cách mạng ở thuộc địa.","Ý này có thật trong đáp án — nhưng thuộc buổi 7, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Giáo dục và định hướng thực hành đạo đức cách mạng, củng cố niềm tin khoa học gắn liền với trau dồi tình cảm cách mạng, bồi dưỡng lòng yêu nước.","Ý này có thật trong đáp án — nhưng thuộc buổi 2, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Thời kỳ 1920-1930: Hình thành những nội dung cơ bản tư tưởng về cách mạng Việt Nam.","Ý này có thật trong đáp án — nhưng thuộc buổi 5, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Đại đoàn kết dân tộc là một mục tiêu, nhiệm vụ hàng đầu của cách mạng Việt Nam","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15},{"id":"b5","buoi":5,"chude":"02·03","ten":"Giá trị truyền thống, nhân tố chủ quan và quá trình hình thành","hoi":"Trình bày các giá trị truyền thống, nhân tố chủ quan và quá trình hình thành, phát triển tư tưởng Hồ Chí Minh.","that":[["Liệt kê các giá trị truyền thống tốt đẹp của dân tộc Việt Nam","1,0 đ",0],["Phân tích chủ nghĩa yêu nước là giá trị xuyên suốt trong những truyền thống tốt đẹp của dân tộc Việt Nam.","2,0 đ",0],["Liệt kê và phân tích các phẩm chất cá nhân Hồ Chí Minh","1,5 đ",0],["Liệt kê và phân tích tài năng hoạt động, tổng kết thực tiễn phát triển lý luận của Hồ Chí Minh","1,5 đ",0],["Thời kỳ trước năm 1911: Hình thành tư tưởng yêu nước và chí hướng tìm đường cứu nước mới.","1,0 đ",0],["Thời kỳ 1911-1920: Hình thành tư tưởng cứu nước, giải phóng dân tộc Việt Nam theo con đường cách mạng vô sản.","1,0 đ",0],["Thời kỳ 1920-1930: Hình thành những nội dung cơ bản tư tưởng về cách mạng Việt Nam.","1,0 đ",0],["Thời kỳ 1930-1941: Vượt qua thử thách, giữ vững đường lối, phương pháp cách mạng Việt Nam đúng đắn, sáng tạo.","1,0 đ",0],["Thời kỳ 1941-1969: Tư tưởng Hồ Chí Minh tiếp tục phát triển, soi đường cho sự nghiệp cách mạng của Đảng và nhân dân ta.","1,0 đ",0]],"gia":[["Kiểm soát quyền lực nhà nước.","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Giá trị truyền thống tốt đẹp của dân tộc Việt Nam","Ý này có thật trong đáp án — nhưng thuộc buổi 4, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Phòng, chống tiêu cực trong Nhà nước.","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Nhà nước do nhân dân","Ý này có thật trong đáp án — nhưng thuộc buổi 9, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":10},{"id":"b6","buoi":6,"chude":"04","ten":"Độc lập dân tộc","hoi":"Trình bày và phân tích các luận điểm của Hồ Chí Minh về vấn đề độc lập dân tộc.","that":[["Độc lập, tự do là quyền thiêng liêng, bất khả xâm phạm của tất cả các dân tộc.","1,25 đ",0],["Độc lập dân tộc phải gắn liền với tự do, hạnh phúc của nhân dân.","1,25 đ",0],["Độc lập dân tộc phải là nền độc lập thật sự, hoàn toàn và triệt để.","1,25 đ",0],["Độc lập dân tộc gắn liền với thống nhất và toàn vẹn lãnh thổ.","1,25 đ",0],["Khát vọng và quyền hưởng tự do, độc lập của dân tộc Việt Nam.","1,5 đ",0],["Hồ Chí Minh gửi tới Hội nghị Vécxây yêu sách 8 điểm","0,5 đ",1],["Hồ Chí Minh trên cơ sở từ quyền con người đã khái quát lên quyền cơ bản của các dân tộc","0,5 đ",1],["Trong Chánh cương vắn tắt của Đảng (năm 1930), Hồ Chí Minh xác định mục tiêu chính trị của Đảng là “Đánh đổ đế quốc chủ nghĩa Pháp và bọn phong kiến; Làm cho nước Nam được hoàn toàn độc lập”","0,5 đ",1],["Các câu nói thể hiện khát vọng, quyền và quyết tâm bảo vệ độc lập dân tộc của Hồ Chí Minh.","1,5 đ",0],["Bản Tuyên ngôn độc lập: “…Toàn thể dân Việt Nam quyết đem tất cả tinh thần và lực lượng, tính mệnh và của cải để giữ vững quyền tự do và độc lập ấy”","0,5 đ",1],["Lời kêu gọi toàn quốc kháng chiến (1946): “Không! Chúng ta thà hy sinh tất cả, chứ nhất định không chịu mất nước, nhất định không chịu đầu hàng”","0,5 đ",1],["Ngày 17/7/1966, Hồ Chí Minh đã nêu lên chân lý: “Không có gì quý hơn độc lập tự do.”","0,5 đ",1]],"gia":[["Thời kỳ 1920-1930: Hình thành những nội dung cơ bản tư tưởng về cách mạng Việt Nam.","Ý này có thật trong đáp án — nhưng thuộc buổi 5, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Việc tu dưỡng đạo đức phải được thực hiện trong mọi hoạt động thực tiễn, trong đời tư cũng như trong đời công, trong sinh hoạt, học tập, lao động, chiến đấu,…","Ý này có thật trong đáp án — nhưng thuộc buổi 11, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Liệt kê các giá trị truyền thống tốt đẹp của dân tộc Việt Nam","Ý này có thật trong đáp án — nhưng thuộc buổi 5, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Nhà nước do nhân dân","Ý này có thật trong đáp án — nhưng thuộc buổi 9, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15},{"id":"b7","buoi":7,"chude":"05","ten":"Cách mạng giải phóng dân tộc","hoi":"Phân tích các luận điểm của Hồ Chí Minh về cách mạng giải phóng dân tộc.","that":[["Lý do lựa chọn giải phóng dân tộc theo con đường cách mạng vô sản của Hồ Chí Minh.","2,0 đ",0],["Rút bài học từ sự thất bại của các con đường cứu nước trước đó. Tình trạng khủng hoảng về đường lối cứu nước ở Việt Nam đầu thế kỷ XX,…","1,0 đ",1],["Đánh giá các cuộc cách mạng tư sản trên thế giới là không triệt để","0,5 đ",1],["Đánh giá về cách mạng tháng 10 Nga là cuộc cách mạng triệt để","0,5 đ",1],["Nội dung con đường cách mạng vô sản của Hồ Chí Minh:","1,0 đ",0],["Giải phóng dân tộc gắn liền giải phóng giai cấp, trong đó giải phóng dân tộc là trên hết, trước hết, tức là: Giải phóng dân tộc - GPXH - GP giai cấp - GP con người.","0,5 đ",1],["Độc lập dân tộc gắn liền với CNXH","0,5 đ",1],["Quan điểm của Mác – Lênin: Đảng Cộng sản là nhân tố chủ quan để giai cấp công nhân hoàn thành sứ mệnh lịch sử của mình…","0,5 đ",0],["Quan điểm của Hồ Chí Minh khẳng định vai trò to lớn của Đảng đối với cách mạng giải phóng dân tộc theo con đường cách mạng vô sản…","0,5 đ",0],["Quan điểm của Hồ Chí Minh cho rằng, Đảng Cộng sản Việt Nam vừa là đội tiên phong của giai cấp công nhân vừa là đội tiên phong của nhân dân lao động, kiên quyết nhất, hăng hái nhất, trong sạch nhất, tận tâm tận lực phụng sự Tổ quốc,…","2,0 đ",0],["Quan điểm của Quốc tế Cộng sản coi nhẹ năng lực cách mạng ở thuộc địa.","1,0 đ",0],["Nhận định mối quan hệ giữa cách mạng giải phóng dân tộc ở thuộc địa và cách mạng vô sản ở chính quốc là mối quan hệ bình đẳng chứ không phải mối quan hệ lệ thuộc hoặc quan hệ chính - phụ.","1,0 đ",0],["Phân tích thuộc địa có vị trí, vai trò, tầm quan trọng đặc biệt đối với chủ nghĩa đế quốc; khả năng cách mạng của nhân dân các dân tộc thuộc địa,…","1,0 đ",0]],"gia":[["Cương lĩnh, đường lối, chủ trương và mọi hoạt động thực tiễn của Đảng đều phải nhằm mục đích đó","Ý này có thật trong đáp án — nhưng thuộc buổi 9, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Thế giới xuất hiện mâu thuẫn mới (cùng mâu thuẫn cũ vốn có trong các nước tư bản)","Ý này có thật trong đáp án — nhưng thuộc buổi 4, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Mục tiêu của chủ nghĩa xã hội ở Việt Nam.","Ý này có thật trong đáp án — nhưng thuộc buổi 8, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Chủ thể của khối đại đoàn kết dân tộc","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15},{"id":"b8","buoi":8,"chude":"06","ten":"Chủ nghĩa xã hội và xây dựng CNXH ở Việt Nam","hoi":"Phân tích tư tưởng Hồ Chí Minh về xây dựng chủ nghĩa xã hội ở Việt Nam.","that":[["Mục tiêu của chủ nghĩa xã hội ở Việt Nam.","3,0 đ",0],["Mục tiêu về chính trị","0,75 đ",1],["Mục tiêu về kinh tế","0,75 đ",1],["Mục tiêu về văn hóa","0,75 đ",1],["Mục tiêu về xã hội","0,75 đ",1],["Động lực của chủ nghĩa xã hội ở Việt Nam.","2,0 đ",0],["Những động lực hàng đầu: Lợi ích của dân, dân chủ của dân, đoàn kết của dân;","1,0 đ",1],["Hoạt động của tổ chức và cá nhân","1,0 đ",1]],"gia":[["Phong trào yêu nước theo khuynh hướng tư sản, tiêu biểu phong trào của Phan Bội Châu, Phan Chu Trinh, …","Ý này có thật trong đáp án — nhưng thuộc buổi 3, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Thế giới xuất hiện mâu thuẫn mới (cùng mâu thuẫn cũ vốn có trong các nước tư bản)","Ý này có thật trong đáp án — nhưng thuộc buổi 4, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Lực lượng của khối đại đoàn kết toàn dân tộc.","Ý này có thật trong đáp án — nhưng thuộc buổi 10, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Theo Hồ Chí Minh, đạo đức cách mạng không phải từ trên trời sa xuống. Nó do đấu tranh rèn luyện bền bỉ hàng ngày mà phát triển, mà củng cố,…","Ý này có thật trong đáp án — nhưng thuộc buổi 11, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":8},{"id":"b9","buoi":9,"chude":"07·08·09","ten":"Đảng Cộng sản Việt Nam và Nhà nước dân chủ","hoi":"Phân tích quan điểm của Hồ Chí Minh về Đảng Cộng sản Việt Nam và Nhà nước dân chủ.","that":[["Tính tất yếu của sự lãnh đạo Đảng bắt nguồn từ quy luật phát triển của cách mạng Việt Nam và học thuyết Mác – Lênin.","1,0 đ",0],["Vai trò lãnh đạo của Đảng được thể hiện trong việc đề ra đường lối đúng, tập hợp lực lượng, tổ chức hành động, đưa dân tộc đi từ nô lệ đến độc lập, rồi tiến lên con đường xã hội chủ nghĩa.","2,0 đ",0],["Mục đích hoạt động của Đảng là lãnh đạo đấu tranh giải phóng dân tộc, giải phóng xã hội, giải phóng giai cấp, giải phóng con người.","1,0 đ",0],["Cương lĩnh, đường lối, chủ trương và mọi hoạt động thực tiễn của Đảng đều phải nhằm mục đích đó","1,0 đ",0],["Đội ngũ đảng viên phải luôn luôn thấm nhuần đạo đức cách mạng, ra sức tu dưỡng, rèn luyện, suốt đời phấn đấu cho lợi ích của dân, của nước","1,0 đ",0],["Bản chất giai cấp của Nhà nước.","1,0 đ",0],["Bản chất giai cấp công nhân","0,5 đ",1],["Bản chất giai cấp công nhân thống nhất với tính nhân dân, tính dân tộc","0,5 đ",1],["Nhà nước của nhân dân, do nhân dân, vì nhân dân.","2,0 đ",0],["Nhà nước của nhân dân","1,0 đ",1],["Nhà nước do nhân dân","0,5 đ",1],["Nhà nước vì nhân dân","0,5 đ",1]],"gia":[["Thực tiễn Việt Nam cuối thế kỷ XIX – đầu thế kỷ XX","Ý này có thật trong đáp án — nhưng thuộc buổi 3, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Giải phóng dân tộc gắn liền giải phóng giai cấp, trong đó giải phóng dân tộc là trên hết, trước hết, tức là: Giải phóng dân tộc - GPXH - GP giai cấp - GP con người.","Ý này có thật trong đáp án — nhưng thuộc buổi 7, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Nêu và phân tích khái niệm “Tư tưởng Hồ Chí Minh” (Đại hội XI của Đảng Cộng sản Việt Nam năm 2011 nêu).","Ý này có thật trong đáp án — nhưng thuộc buổi 2, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Góp phần nâng cao năng lực tư duy lý luận","Ý này có thật trong đáp án — nhưng thuộc buổi 2, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15},{"id":"b10","buoi":10,"chude":"10·11·12","ten":"Nhà nước pháp quyền và đại đoàn kết toàn dân tộc","hoi":"Phân tích quan điểm của Hồ Chí Minh về nhà nước trong sạch, vững mạnh và về đại đoàn kết toàn dân tộc.","that":[["Kiểm soát quyền lực nhà nước.","1,0 đ",0],["Phòng, chống tiêu cực trong Nhà nước.","2,0 đ",0],["Đặc quyền, đặc lợi","0,5 đ",1],["Tham ô, lãng phí, quan liêu","0,5 đ",1],["Tư túng, chia rẽ, kiêu ngạo","0,5 đ",1],["Biện pháp phòng, chống tiêu cực trong Nhà nước (5 biện pháp)","0,5 đ",1],["Vai trò của đại đoàn kết toàn dân tộc","1,5 đ",0],["Đại đoàn kết toàn dân tộc là vấn đề có ý nghĩa chiến lược, quyết định thành công của cách mạng","0,75 đ",1],["Đại đoàn kết dân tộc là một mục tiêu, nhiệm vụ hàng đầu của cách mạng Việt Nam","0,75 đ",1],["Lực lượng của khối đại đoàn kết toàn dân tộc.","1,5 đ",0],["Chủ thể của khối đại đoàn kết dân tộc","0,75 đ",1],["Nền tảng của khối đại đoàn kết dân tộc","0,75 đ",1]],"gia":[["Liệt kê và phân tích các phẩm chất cá nhân Hồ Chí Minh","Ý này có thật trong đáp án — nhưng thuộc buổi 5, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Trung với nước, hiếu với dân","Ý này có thật trong đáp án — nhưng thuộc buổi 11, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Thực tiễn Việt Nam cuối thế kỷ XIX – đầu thế kỷ XX","Ý này có thật trong đáp án — nhưng thuộc buổi 3, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Mục tiêu về chính trị","Ý này có thật trong đáp án — nhưng thuộc buổi 8, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15},{"id":"b11","buoi":11,"chude":"13·14","ten":"Đạo đức cách mạng","hoi":"Phân tích quan điểm của Hồ Chí Minh về chuẩn mực và nguyên tắc xây dựng đạo đức cách mạng.","that":[["Trung với nước, hiếu với dân","1,0 đ",1],["Cần, kiệm, liêm, chính, chí công vô tư","2,0 đ",1],["Yêu thương con người, sống có tình có nghĩa","1,0 đ",1],["Tinh thần quốc tế trong sáng","1,0 đ",1],["Nói đi đôi với làm, nêu gương về đạo đức.","2,0 đ",0],["Nói đi đôi với làm","1,0 đ",1],["Nêu gương về đạo đức","1,0 đ",1],["Xây đi đôi với chống","1,5 đ",0],["Xây tức là xây dựng các giá trị, các chuẩn mực đạo đức mới; chống là chống các biểu hiện, các hành vi về đạo đức, suy thoái đạo đức…","0,5 đ",1],["Xây dựng đạo đức mới trước hết phải được tiến hành bằng việc giáo dục những phẩm chất, những chuẩn mực đạo đức mới từ trong gia đình đến nhà trường và ngoài xã hội,…","0,5 đ",1],["Chống lại cái xấu, cái sai, cái vô đạo đức thường vẫn diễn ra, phải phát hiện sớm, phải hướng mọi người vào cuộc đấu tranh cho sự trong sạch, lành mạnh về đạo đức,…","0,5 đ",1],["Tu dưỡng đạo đức suốt đời:","1,5 đ",0],["Theo Hồ Chí Minh, đạo đức cách mạng không phải từ trên trời sa xuống. Nó do đấu tranh rèn luyện bền bỉ hàng ngày mà phát triển, mà củng cố,…","0,5 đ",1],["Tu dưỡng đạo đức cách mạng phải trên tinh thần tự giác, tự nguyện, dựa vào lương tâm của mỗi người và dư luận của quần chúng","0,5 đ",1],["Việc tu dưỡng đạo đức phải được thực hiện trong mọi hoạt động thực tiễn, trong đời tư cũng như trong đời công, trong sinh hoạt, học tập, lao động, chiến đấu,…","0,5 đ",1]],"gia":[["Phong trào theo khuynh hướng phong kiến lần lượt thất bại (Các phong trào do: Trương Định, Nguyễn Trung Trực, Trần Tấn, Đặng Như Mai, Nguyễn Thiện Thuật,… ; Hoàng Hoa Thám lãnh đạo)","Ý này có thật trong đáp án — nhưng thuộc buổi 3, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Giải phóng dân tộc gắn liền giải phóng giai cấp, trong đó giải phóng dân tộc là trên hết, trước hết, tức là: Giải phóng dân tộc - GPXH - GP giai cấp - GP con người.","Ý này có thật trong đáp án — nhưng thuộc buổi 7, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Bản chất giai cấp của Nhà nước.","Ý này có thật trong đáp án — nhưng thuộc buổi 9, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."],["Bản Tuyên ngôn độc lập: “…Toàn thể dân Việt Nam quyết đem tất cả tinh thần và lực lượng, tính mệnh và của cải để giữ vững quyền tự do và độc lập ấy”","Ý này có thật trong đáp án — nhưng thuộc buổi 6, không phải bài hôm nay. Bẫy “đúng nhưng lạc bài”."]],"phut":15}];
+</script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-vo" viewBox="0 0 96 96">
+ <rect x="20" y="12" width="58" height="72" rx="6" fill="currentColor"/>
+ <rect x="20" y="12" width="11" height="72" rx="5" fill="#000" fill-opacity=".22"/>
+ <g fill="#FBFAF3" fill-opacity=".85"><circle cx="25.5" cy="26" r="2.6"/><circle cx="25.5" cy="48" r="2.6"/><circle cx="25.5" cy="70" r="2.6"/></g>
+ <rect x="37" y="20" width="34" height="22" rx="3" fill="#FBFAF3" fill-opacity=".95"/>
+ <circle cx="45" cy="60" r="3.4" fill="#1B3350"/><circle cx="61" cy="60" r="3.4" fill="#1B3350"/>
+ <path d="M45 68 q8 6 16 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-kep" viewBox="0 0 96 96">
+ <path d="M30 78 V34 a18 18 0 0 1 36 0 v36 a11 11 0 0 1 -22 0 V54" fill="none" stroke="#8FA6BC" stroke-width="7.5" stroke-linecap="round"/>
+ <circle cx="41" cy="38" r="3.2" fill="#1B3350"/><circle cx="55" cy="38" r="3.2" fill="#1B3350"/>
+ <path d="M41 45 q7 6 14 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-giay" viewBox="0 0 96 96">
+ <path d="M18 18 H78 V60 L60 78 H18 Z" fill="currentColor" stroke="#1B3350" stroke-opacity=".18" stroke-width="1.5"/>
+ <path d="M78 60 H60 V78 Z" fill="#000" fill-opacity=".18"/>
+ <circle cx="40" cy="42" r="3.4" fill="#1B3350"/><circle cx="56" cy="42" r="3.4" fill="#1B3350"/>
+ <path d="M41 53 q7 5 14 -1" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-thuoc" viewBox="0 0 96 96">
+ <rect x="8" y="34" width="80" height="28" rx="5" fill="#8CCBB0" stroke="#1B3350" stroke-opacity=".16" stroke-width="1.5"/>
+ <g fill="#2F6B52" opacity=".5"><rect x="16" y="34" width="2.5" height="9"/><rect x="26" y="34" width="2.5" height="6"/>
+ <rect x="36" y="34" width="2.5" height="9"/><rect x="46" y="34" width="2.5" height="6"/><rect x="56" y="34" width="2.5" height="9"/>
+ <rect x="66" y="34" width="2.5" height="6"/><rect x="76" y="34" width="2.5" height="9"/></g>
+ <circle cx="41" cy="50" r="3.2" fill="#1B3350"/><circle cx="55" cy="50" r="3.2" fill="#1B3350"/>
+ <path d="M42 57 h12" stroke="#1B3350" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-tay" viewBox="0 0 96 96">
+ <rect x="16" y="30" width="64" height="38" rx="7" fill="#EE9AA2" stroke="#1B3350" stroke-opacity=".16" stroke-width="1.5"/>
+ <path d="M23 30 h50 a7 7 0 0 1 7 7 v7 H16 v-7 a7 7 0 0 1 7 -7 Z" fill="#FBFAF3"/>
+ <circle cx="40" cy="52" r="3.4" fill="#1B3350"/><circle cx="56" cy="52" r="3.4" fill="#1B3350"/>
+ <path d="M40 60 q8 7 16 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-trong" viewBox="0 0 96 96">
+ <circle cx="48" cy="9" r="4" fill="#6E7B74"/>
+ <path d="M48 11 L30 28 M48 11 L66 28" stroke="#8A5B2E" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+ <rect x="22" y="28" width="52" height="48" rx="9" fill="#A8452F"/>
+ <ellipse cx="48" cy="29" rx="26" ry="7" fill="#E9DFC4"/><rect x="22" y="46" width="52" height="6" fill="#B08D57"/>
+ <circle cx="40" cy="61" r="3.4" fill="#F3E6D2"/><circle cx="56" cy="61" r="3.4" fill="#F3E6D2"/>
+ <path d="M40 69 q8 6 16 0" stroke="#F3E6D2" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-bando" viewBox="0 0 96 96">
+ <rect x="10" y="14" width="76" height="8" rx="4" fill="#8A5B2E"/>
+ <rect x="15" y="22" width="66" height="56" fill="#DCE8E0" stroke="#1B3350" stroke-opacity=".18" stroke-width="1.5"/>
+ <path d="M22 62 q6 -16 18 -12 q10 3 12 -6 q3 -10 16 -6 v24 z" fill="#8FBF9F"/>
+ <circle cx="40" cy="40" r="3.4" fill="#1B3350"/><circle cx="56" cy="40" r="3.4" fill="#1B3350"/>
+ <path d="M40 48 q8 6 16 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <circle cx="48" cy="82" r="4" fill="#8A5B2E"/></symbol>
+<symbol id="i-so" viewBox="0 0 96 96">
+ <path d="M8 32 q40 -9 40 5 v37 q0 -14 -40 -5 z" fill="#F4F1E5" stroke="#1B3350" stroke-opacity=".18" stroke-width="1.5"/>
+ <path d="M88 32 q-40 -9 -40 5 v37 q0 -14 40 -5 z" fill="#FBF9F1" stroke="#1B3350" stroke-opacity=".18" stroke-width="1.5"/>
+ <rect x="44" y="30" width="8" height="46" rx="3" fill="#A8452F"/>
+ <g stroke="#1B3350" stroke-opacity=".22" stroke-width="1.6"><path d="M58 44 h22"/><path d="M58 52 h18"/></g>
+ <circle cx="20" cy="48" r="3.2" fill="#1B3350"/><circle cx="32" cy="46" r="3.2" fill="#1B3350"/>
+ <path d="M20 56 q6 5 12 -1" stroke="#1B3350" stroke-width="2.8" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="i-khen" viewBox="0 0 96 96">
+ <rect x="14" y="18" width="68" height="52" rx="3" fill="#FAF6E7" stroke="#B08D57" stroke-width="3.5"/>
+ <g stroke="#B08D57" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round"><path d="M26 30 h44"/><path d="M26 58 h30"/></g>
+ <circle cx="40" cy="43" r="3.4" fill="#1B3350"/><circle cx="56" cy="43" r="3.4" fill="#1B3350"/>
+ <path d="M40 51 q8 7 16 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <path d="M64 68 l-5 16 l7 -5 l7 5 l-5 -16 z" fill="#A8452F"/>
+ <circle cx="68" cy="66" r="10" fill="#C9A227"/><circle cx="68" cy="66" r="5" fill="#E0BE45"/></symbol>
+<symbol id="i-phan" viewBox="0 0 96 96">
+ <rect x="36" y="16" width="24" height="56" rx="7" fill="#F4F7F2" stroke="#1B3350" stroke-opacity=".18" stroke-width="1.5"/>
+ <rect x="36" y="16" width="8" height="56" rx="4" fill="#FFF"/>
+ <circle cx="43" cy="40" r="3.2" fill="#2A5847"/><circle cx="53" cy="40" r="3.2" fill="#2A5847"/>
+ <path d="M43 48 q5 5 10 0" stroke="#2A5847" stroke-width="2.8" fill="none" stroke-linecap="round"/></symbol>
+
+<symbol id="n-butchi" viewBox="0 0 96 96">
+ <rect x="35" y="10" width="26" height="11" rx="4" fill="#F0A0A8"/>
+ <rect x="35" y="20" width="26" height="5" fill="#B9C2CC"/>
+ <rect x="35" y="24" width="26" height="44" fill="currentColor"/>
+ <rect x="35" y="24" width="8" height="44" fill="#FFF" fill-opacity=".3"/>
+ <polygon points="35,68 61,68 48,88" fill="#E4B683"/>
+ <polygon points="42,79 54,79 48,88" fill="currentColor"/>
+ <circle cx="43" cy="43" r="3.4" fill="#1B3350"/><circle cx="55" cy="43" r="3.4" fill="#1B3350"/>
+ <path d="M42 52 q6 6 12 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="n-giaynho" viewBox="0 0 96 96">
+ <path d="M18 18 H78 V60 L60 78 H18 Z" fill="currentColor" stroke="#1B3350" stroke-opacity=".2" stroke-width="1.5"/>
+ <path d="M78 60 H60 V78 Z" fill="#000" fill-opacity=".2"/>
+ <circle cx="40" cy="42" r="3.4" fill="#1B3350"/><circle cx="56" cy="42" r="3.4" fill="#1B3350"/>
+ <path d="M41 53 q7 5 14 -1" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="n-thuoc" viewBox="0 0 96 96">
+ <rect x="8" y="34" width="80" height="28" rx="5" fill="currentColor" stroke="#1B3350" stroke-opacity=".2" stroke-width="1.5"/>
+ <g fill="#000" opacity=".28"><rect x="16" y="34" width="2.5" height="9"/><rect x="26" y="34" width="2.5" height="6"/>
+ <rect x="36" y="34" width="2.5" height="9"/><rect x="46" y="34" width="2.5" height="6"/><rect x="56" y="34" width="2.5" height="9"/>
+ <rect x="66" y="34" width="2.5" height="6"/><rect x="76" y="34" width="2.5" height="9"/></g>
+ <circle cx="41" cy="50" r="3.2" fill="#1B3350"/><circle cx="55" cy="50" r="3.2" fill="#1B3350"/>
+ <path d="M42 57 h12" stroke="#1B3350" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="n-cuctay" viewBox="0 0 96 96">
+ <rect x="16" y="30" width="64" height="38" rx="7" fill="currentColor" stroke="#1B3350" stroke-opacity=".2" stroke-width="1.5"/>
+ <path d="M23 30 h50 a7 7 0 0 1 7 7 v7 H16 v-7 a7 7 0 0 1 7 -7 Z" fill="#FBFAF3"/>
+ <circle cx="40" cy="52" r="3.4" fill="#1B3350"/><circle cx="56" cy="52" r="3.4" fill="#1B3350"/>
+ <path d="M40 60 q8 7 16 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="n-ghim" viewBox="0 0 96 96">
+ <rect x="10" y="64" width="76" height="14" rx="7" fill="#6B7F94"/>
+ <rect x="30" y="68" width="26" height="5" rx="2" fill="#C3CDD6"/>
+ <rect x="14" y="36" width="70" height="23" rx="11" fill="#CE4132"/>
+ <circle cx="78" cy="48" r="8" fill="#9A3327"/>
+ <circle cx="38" cy="46" r="3.4" fill="#FBFAF3"/><circle cx="54" cy="46" r="3.4" fill="#FBFAF3"/>
+ <path d="M38 53 q8 5 16 0" stroke="#FBFAF3" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="n-maytinh" viewBox="0 0 96 96">
+ <rect x="22" y="12" width="52" height="72" rx="9" fill="#48596B"/>
+ <rect x="28" y="19" width="40" height="22" rx="4" fill="#A9DCB8"/>
+ <circle cx="40" cy="29" r="3" fill="#1B3350"/><circle cx="56" cy="29" r="3" fill="#1B3350"/>
+ <path d="M41 35 h14" stroke="#1B3350" stroke-width="2.6" stroke-linecap="round"/>
+ <g fill="#7C8B9C"><rect x="29" y="47" width="11" height="9" rx="2.5"/><rect x="43" y="47" width="11" height="9" rx="2.5"/>
+ <rect x="57" y="47" width="11" height="9" rx="2.5"/><rect x="29" y="60" width="11" height="9" rx="2.5"/>
+ <rect x="43" y="60" width="11" height="9" rx="2.5"/><rect x="57" y="60" width="11" height="9" rx="2.5"/>
+ <rect x="29" y="73" width="25" height="8" rx="2.5"/></g>
+ <rect x="57" y="73" width="11" height="8" rx="2.5" fill="#E8B71E"/></symbol>
+<symbol id="n-dongho" viewBox="0 0 96 96">
+ <rect x="41" y="8" width="14" height="10" rx="3" fill="#5E7185"/>
+ <circle cx="48" cy="54" r="30" fill="#DFE5EA" stroke="#6B7F94" stroke-width="5"/>
+ <g fill="#8FA0AF"><rect x="46.5" y="26" width="3" height="6" rx="1.5"/><rect x="46.5" y="76" width="3" height="6" rx="1.5"/>
+ <rect x="70" y="52.5" width="6" height="3" rx="1.5"/><rect x="20" y="52.5" width="6" height="3" rx="1.5"/></g>
+ <circle cx="40" cy="48" r="3.4" fill="#1B3350"/><circle cx="56" cy="48" r="3.4" fill="#1B3350"/>
+ <path d="M39 60 q9 7 18 0" stroke="#1B3350" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+</defs></svg>
+
+<div class="page" id="wrap">
+
+<!-- ======== TRANG CHỦ ======== -->
+<section class="screen on" id="s-home">
+  <div class="top"><svg style="width:44px;height:44px"><use href="#i-phan"/></svg>
+    <div><div class="eyebrow">Tư tưởng Hồ Chí Minh · POL1001</div><h1>Đi tìm liên kết</h1></div></div>
+  <p class="muted">Câu trả lời đã có sẵn. Nó chỉ đang bị cắt rời và xáo tung lên. Việc của bạn là xếp lại cho đúng — và <b>ném ra</b> bốn mảnh giả trà trộn trong đó.</p>
+
+  <div class="picks" style="margin-top:18px">
+    <button class="pick" id="go-truong"><svg><use href="#i-kep"/></svg>
+      <span><span class="t">Đội trưởng</span><span class="d">Bấm vào đây tạo phòng.</span></span></button>
+    <button class="pick" id="go-vao"><svg><use href="#i-giay" style="color:#9BD9C4"/></svg>
+      <span><span class="t">Thành viên</span><span class="d">Nhập mã vào phòng.</span></span></button>
+    <button class="pick" id="go-ca"><svg><use href="#i-giay" style="color:#F6E486"/></svg>
+      <span><span class="t">Chơi một mình</span><span class="d">Ôn lại ở nhà. Bạn cầm toàn bộ mảnh.</span></span></button>
+  </div>
+
+  <div class="note" style="margin-top:18px"><b>Cách tính điểm.</b> Mảnh thật đúng vị trí <b class="ok">+1</b> · sai vị trí <b>0</b> · mảnh giả lọt vào câu trả lời <b class="bad">−1</b> · ném đúng cả bốn mảnh giả vào thùng <b class="ok">thưởng +2</b>. Bài buổi 2 tối đa <b>11 điểm</b>, và đó là điểm của cả nhóm. Để lọt một mảnh giả vừa mất điểm của nó, vừa đẩy lệch mọi mảnh phía sau — nên việc soi mảnh giả đáng giá ngang với việc sắp thứ tự.</div>
+  <div class="note"><b>Hai vòng, một đồng hồ.</b> <b>Vòng kín 12 phút</b>: không mở tài liệu, không mở phiếu khung — chỉ dùng cái đang có trong đầu. Tiếp ngay <b>vòng mở 2 phút</b>: được mở tài liệu để sửa, nhưng mảnh nào đặt lại trong vòng này sẽ hiện <b class="bad">màu đỏ</b>, như sửa bằng bút đỏ. Vẫn tính điểm như thường; màu đỏ chỉ để cả nhóm thấy mình chưa nhớ chỗ nào. <b>Hết vòng mở là bài tự nộp</b> — không kịp thì cứ đoán, bỏ trống chắc chắn không có điểm.</div>
+  <div class="note"><b>Cách chơi.</b> Đội trưởng mở phòng và đọc to tên nhóm. Từng bạn vào phòng, chọn nhân vật, nhận một xấp mảnh <b>chỉ mình mình thấy</b>. Bạn đặt mảnh của mình vào ô số mấy trong câu trả lời chung là việc của bạn — nhưng muốn biết ô nào còn trống thì phải hỏi to. Bấm <b>Nộp</b> là phần của bạn hiện lên không gian của đội trưởng, <b>viết bằng đúng màu nhân vật của bạn</b>.</div>
+  <div class="note"><b>Mỗi đội cử 6 bạn cầm thiết bị</b> — 1 nhóm trưởng và 5 thành viên — mỗi bạn nhận <b>một số mảnh</b>, không phải một mảnh. Những bạn còn lại trong đội không cầm máy: nhiệm vụ của họ là <b>hỗ trợ, kết nối, tra cứu, tư vấn</b>. Đội hai chục người vẫn bận rộn như thường.</div>
+</section>
+
+<!-- ======== CHUẨN BỊ CÁ NHÂN ======== -->
+<section class="screen" id="s-ca">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Chơi một mình</div></div>
+  <h2 style="font-size:26px">Chuẩn bị</h2>
+  <div class="stack" style="margin-top:14px">
+    <div class="card stack">
+      <label class="f">Tên của bạn<input type="text" id="ca-ten" maxlength="30" placeholder="Nguyễn Văn A" autocomplete="off"></label>
+      <div><div class="f" style="margin-bottom:6px">Bạn thuộc đội nào?</div><div class="teams" id="ca-doi"></div></div>
+    </div>
+    <div class="card stack">
+      <label class="f">Bài học<select id="ca-bai"></select></label>
+      <label class="f">Thời gian vòng kín<select id="ca-phut"></select></label>
+      <p class="tiny muted" id="ca-mota"></p>
+    </div>
+    <button class="btn w" id="ca-start">Bắt đầu</button>
+  </div>
+</section>
+
+<!-- ======== ĐỘI TRƯỞNG MỞ PHÒNG ======== -->
+<section class="screen" id="s-truong">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Đội trưởng · mở phòng</div></div>
+  <div class="rolechip" id="tr-chip" style="margin-bottom:12px"><span class="av"><svg><use href="#i-kep"/></svg></span>
+    <span><span class="r1">Nhân vật của bạn</span><span class="r2">Kẹp Giấy</span></span></div>
+  <div class="stack">
+    <div class="card stack">
+      <label class="f">Tên đội trưởng<input type="text" id="tr-ten" maxlength="30" placeholder="Tên bạn" autocomplete="off"></label>
+      <div><div class="f" style="margin-bottom:6px">Nhóm của bạn</div><div class="teams" id="tr-doi"></div></div>
+    </div>
+    <div class="card stack">
+      <label class="f">Bài học<select id="tr-bai"></select></label>
+      <div class="grid2">
+        <label class="f">Số người cầm thiết bị (2–8)<input type="number" id="tr-siso" min="2" max="8" value="6"></label>
+        <label class="f">Thời gian vòng kín<select id="tr-phut"></select></label>
+      </div>
+      <p class="tiny muted" id="tr-chia"></p>
+    </div>
+    <button class="btn w" id="tr-tao">Mở phòng</button>
+    <p class="tiny muted" id="tr-net">—</p>
+  </div>
+</section>
+
+<!-- ======== KHÔNG GIAN CÂU TRẢ LỜI CỦA ĐỘI TRƯỞNG ======== -->
+<section class="screen" id="s-bang">
+  <div class="chang c1" id="bg-bang"><svg><use href="#i-trong"/></svg>
+    <span id="bg-tx">Chưa bắt đầu</span><span class="clk mono" id="bg-clk">12:00</span></div>
+
+  <div class="card" style="margin-top:12px;text-align:center">
+    <p class="eyebrow">Đọc to cho cả đội</p>
+    <div class="macode" id="bg-ma">NHÓM 1</div>
+    <p class="tiny muted" id="bg-off" hidden></p>
+  </div>
+
+  <div id="bg-doingu" style="margin-top:12px"></div>
+
+  <div class="q"><div class="lb">Câu hỏi</div><div class="tx" id="bg-hoi"></div></div>
+
+  <div id="bg-cam" class="held" hidden></div>
+  <div id="bg-khay"></div>
+  <div id="bg-slot"></div>
+  <div id="bg-thung"></div>
+
+  <div class="row" style="margin-top:18px">
+    <button class="btn" id="bg-chot">Chốt &amp; chấm điểm cho nhóm</button>
+    <button class="btn g" id="bg-gop" hidden>Nhập tay mã của các bạn</button>
+    <button class="btn g sm" data-home>Thoát</button>
+  </div>
+</section>
+
+<!-- ======== THÀNH VIÊN VÀO PHÒNG ======== -->
+<section class="screen" id="s-vao">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Vào phòng nhóm</div></div>
+  <div class="stack">
+    <div class="card stack">
+      <label class="f">Nhóm + STT<input type="text" id="v-ma" placeholder="NHÓM 1" autocomplete="off" style="font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:.06em"></label>
+      <label class="f">Tên của bạn<input type="text" id="v-ten" maxlength="30" placeholder="Tên bạn" autocomplete="off"></label>
+      <div id="v-offbox" hidden>
+        <div class="grid2">
+          <label class="f">Bài học (đội trưởng đọc)<select id="v-bai"></select></label>
+          <label class="f">Số người cầm máy<input type="number" id="v-siso" min="2" max="8" value="6"></label>
+        </div>
+        <p class="tiny muted" style="margin-top:6px">Máy này không nối được với máy đội trưởng, nên bạn phải tự chọn đúng bài và đúng số máy — sai một trong hai là nhận nhầm xấp mảnh.</p>
+      </div>
+      <div><div class="f" style="margin-bottom:7px">Nhân vật của bạn</div>
+        <div class="nvgrid" id="v-nv"></div>
+        <p class="tiny muted" style="margin-top:7px" id="v-nvghi"></p></div>
+    </div>
+    <button class="btn w" id="v-vao">Nhận mảnh của tôi</button>
+    <p class="small bad" id="v-loi"></p>
+  </div>
+</section>
+
+<!-- ======== MÀN CHƠI CỦA THÀNH VIÊN ======== -->
+<section class="screen" id="s-play">
+  <div class="chang c1" id="bang"><svg><use href="#i-trong"/></svg>
+    <span id="bang-tx">Vòng kín · không mở tài liệu nhé</span><span class="clk mono" id="bang-clk">12:00</span></div>
+  <div class="row" style="margin-top:10px">
+    <span class="badge" id="p-doi">Nhóm</span><span class="badge" id="p-vai">Nhân vật</span><span class="sp"></span>
+    <button class="btn g sm" data-home>Thoát</button>
+  </div>
+  <div class="q"><div class="lb">Câu hỏi — luôn hiện, không giấu</div><div class="tx" id="p-hoi"></div></div>
+  <p class="small muted" id="p-huong" style="margin-top:10px"></p>
+
+  <div id="p-cam" class="held" hidden></div>
+  <div id="p-khay"></div>
+  <div id="p-slot"></div>
+  <div id="p-thung"></div>
+
+  <div class="row" style="margin-top:18px">
+    <button class="btn" id="p-nop">Nộp cho đội trưởng</button>
+  </div>
+</section>
+
+<!-- ======== THÀNH VIÊN ĐÃ NỘP — CHỜ CHỐT ======== -->
+<section class="screen" id="s-cho">
+  <div class="chang c1" id="ch-bang"><svg><use href="#i-trong"/></svg>
+    <span id="ch-tx">Đã gửi cho đội trưởng</span><span class="clk mono" id="ch-clk">—</span></div>
+  <div class="card" style="margin-top:12px">
+    <div class="eyebrow">Bạn đã nộp</div>
+    <div class="dh" id="ch-nv" style="font-family:'Baloo 2';font-weight:700;font-size:22px;margin-top:2px">—</div>
+    <p class="small muted" style="margin-top:4px">Phần của bạn đã hiện lên không gian của đội trưởng. Điểm sẽ hiện ngay khi đội trưởng chốt bài.</p>
+  </div>
+  <div id="ch-doingu" style="margin-top:12px"></div>
+  <h3 style="font-size:18px;margin-top:18px">Không gian câu trả lời của nhóm</h3>
+  <p class="tiny muted" style="margin-top:3px">Đang đầy dần. Ai còn thiếu thì nhắc giúp — nói to vẫn nhanh hơn chờ.</p>
+  <div id="ch-slot"></div>
+  <div id="ch-thung"></div>
+  <div class="row" style="margin-top:18px"><button class="btn g" id="ch-sua">Nộp lại · sửa phần của tôi</button>
+    <button class="btn g sm" data-home>Thoát</button></div>
+</section>
+
+<!-- ======== MÃ TRẢ LỜI · CHỈ KHI KHÔNG NỐI ĐƯỢC MÁY ======== -->
+<section class="screen" id="s-code">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Đọc số cho đội trưởng</div></div>
+  <div class="card">
+    <p class="eyebrow" style="text-align:center" id="c-nv">—</p>
+    <div class="codebox" style="margin-top:10px"><div class="cd" id="c-ma">—</div></div>
+    <p class="small muted" style="margin-top:12px" id="c-giai"></p>
+    <div class="warn" id="c-hetgio" hidden style="margin-top:12px">Hết vòng mở nên bài của bạn tự nộp. Dãy số này là bản cuối — đọc to cho đội trưởng.</div>
+    <button class="btn g sm w" id="c-sua" style="margin-top:12px">Quay lại sửa</button>
+  </div>
+  <div class="note"><b>Vì sao phải đọc bằng miệng.</b> Máy này không nối được với máy đội trưởng, nên cách duy nhất để phần của bạn về được không gian chung là bạn đọc lên. Đọc lần lượt từng số, theo đúng thứ tự mảnh đang hiện ở trên: số ô, <b>0</b> là ném vào thùng, <b>-</b> là chưa đặt.</div>
+</section>
+
+<!-- ======== GỘP SỐ · CHỈ KHI KHÔNG NỐI ĐƯỢC MÁY ======== -->
+<section class="screen" id="s-gop">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Đội trưởng · nhập tay</div></div>
+  <h2 style="font-size:24px">Nhập số của cả nhóm</h2>
+  <p class="small muted" style="margin-top:4px">Nghe từng bạn đọc rồi gõ vào ô của nhân vật đó, các số cách nhau bằng dấu chấm — <b>0</b> là ném vào thùng, <b>-</b> là chưa đặt. Ai chưa nộp thì để trống.</p>
+  <div id="g-list" class="stack" style="margin-top:14px"></div>
+  <button class="btn w" id="g-cham" style="margin-top:16px">Đưa vào không gian nhóm</button>
+  <p class="small bad" id="g-loi"></p>
+</section>
+
+<!-- ======== KẾT QUẢ ======== -->
+<section class="screen" id="s-kq">
+  <div class="top"><button class="btn g sm" data-home>← Trang chủ</button><div class="crumb">Kết quả</div></div>
+  <div id="kq-body"></div>
+  <div class="row" style="margin-top:18px">
+    <button class="btn" id="kq-lai">Chơi bài khác</button>
+  </div>
+</section>
+
+
+
+</div>
+<script>
+"use strict";
+/* ============================================================
+   ĐI TÌM LIÊN KẾT — Tư tưởng Hồ Chí Minh (POL1001)
+   Mỗi người cầm một xấp mảnh riêng, đặt vào ô số mấy trong câu
+   trả lời chung là việc phải bàn với nhau. Đội trưởng giữ không
+   gian chung và chốt bài.
+   ============================================================ */
+
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- nhân vật ---------- */
+const MAU_NV = [
+  {id:"vang", ten:"Vàng", hex:"#C8890B"},
+  {id:"xanh", ten:"Xanh", hex:"#1F7A8C"},
+  {id:"hong", ten:"Hồng", hex:"#CB4F70"},
+  {id:"tim",  ten:"Tím",  hex:"#7B3FA0"},
+  {id:"cam",  ten:"Cam",  hex:"#D9682A"},
+  {id:"luc",  ten:"Lục",  hex:"#2F6B52"},
+  {id:"nau",  ten:"Nâu",  hex:"#8A5A3B"}
+];
+/* mỗi nhóm một tổ nhân vật riêng; nhân vật đội trưởng cố định */
+const TO = [
+  {to:"Tổ Bút Chì",  loai:"Bút Chì",  sym:"#n-butchi",  slug:"butchi",
+   tt:"Kẹp Giấy",        tsym:"#i-kep",     tslug:"kepgiay"},
+  {to:"Tổ Giấy Nhớ", loai:"Giấy Nhớ", sym:"#n-giaynho", slug:"giaynho",
+   tt:"Ghim Bấm",        tsym:"#n-ghim",    tslug:"ghimbam"},
+  {to:"Tổ Thước Kẻ", loai:"Thước Kẻ", sym:"#n-thuoc",   slug:"thuocke",
+   tt:"Máy Tính Bỏ Túi", tsym:"#n-maytinh", tslug:"maytinh"},
+  {to:"Tổ Cục Tẩy",  loai:"Cục Tẩy",  sym:"#n-cuctay",  slug:"cuctay",
+   tt:"Đồng Hồ Bấm Giờ", tsym:"#n-dongho",  tslug:"dongho"}
+];
+function danNV(doiSo, siSo){
+  const t = TO[doiSo-1] || TO[0];
+  const out = [{k:0, id:t.tslug, ten:t.tt, sym:t.tsym, hex:"var(--d"+doiSo+")", truong:true}];
+  for(let i=1;i<siSo;i++){
+    const c = MAU_NV[(i-1) % MAU_NV.length];
+    out.push({k:i, id:t.slug+"-"+c.id, ten:t.loai+" "+c.ten, sym:t.sym, hex:c.hex, truong:false});
+  }
+  return out;
+}
+function timNV(doiSo, siSo, id){ return danNV(doiSo, siSo).find(n=>n.id===id) || null; }
+
+const DOI = [
+  {so:1, ten:"Nhóm 1", mau:"var(--d1)"},
+  {so:2, ten:"Nhóm 2", mau:"var(--d2)"},
+  {so:3, ten:"Nhóm 3", mau:"var(--d3)"},
+  {so:4, ten:"Nhóm 4", mau:"var(--d4)"}
+];
+/* Mốc 3 kịch bản buổi 2: vòng kín (buổi 2 là 12′, bài khác lấy theo trường phut) rồi 2′ vòng mở.
+   Không nhân hệ số — điểm game ghi thẳng vào cột B sổ điểm, tối đa 11. */
+const PHUT = [8, 10, 12, 15];
+const MO = 2;
+const XEP = [
+  {min:1.00, dh:"Thuộc như in",         nx:"Không mảnh giả nào lừa được ở đây."},
+  {min:0.85, dh:"Nắm chắc",             nx:"Chỉ còn vài chỗ cần siết lại cho gọn."},
+  {min:0.70, dh:"Đi đúng hướng",        nx:"Khung đã đúng. Giờ đến lượt các chi tiết."},
+  {min:0.50, dh:"Còn vài chỗ lung lay", nx:"Nhớ được ý là tốt rồi — thứ tự thì phải luyện thêm."},
+  {min:0,    dh:"Vòng sau sẽ khác",     nx:"Đọc lại một lượt rồi chơi lại. Lần hai bao giờ cũng nhanh hơn."}
+];
+const GHI_NGOAI = "Những bạn còn lại trong nhóm không cầm thiết bị. Nhiệm vụ của họ là <b>hỗ trợ, kết nối, tra cứu, tư vấn</b> — nghe mảnh, nhắc bài, và giữ cho các bạn cầm máy nói chuyện được với nhau.";
+
+/* ---------- ngẫu nhiên có hạt giống ---------- */
+function rng(seed){ let a = seed >>> 0; return function(){
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+function xao(arr, r){ const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function bam(s){ let h = 2166136261; for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0) % 900 + 100; }
+
+/* ---------- bộ mảnh ---------- */
+function layBai(id){ return BAI.find(b=>b.id===id); }
+function tatCaManh(bai){
+  const t = bai.that.map((m,i)=>({uid:"t"+i, k:"t", i, tx:m[0]}));
+  const g = bai.gia.map((m,i)=>({uid:"g"+i, k:"g", i, tx:m[0], giai:m[1]}));
+  return t.concat(g);
+}
+function deck(bai, seed){ return xao(tatCaManh(bai), rng(seed)); }
+function chia(d, n){ const out = Array.from({length:n}, ()=>[]);
+  d.forEach((m,i)=> out[i % n].push(m)); return out; }
+function chiaChu(soManh, siSo){
+  if(siSo >= soManh) return soManh + " bạn mỗi người 1 mảnh";
+  const c = Math.floor(soManh/siSo), du = soManh % siSo;
+  return du ? (du + " bạn cầm " + (c+1) + " mảnh · " + (siSo-du) + " bạn cầm " + c + " mảnh")
+            : ("mỗi bạn cầm " + c + " mảnh");
+}
+
+/* ---------- trạng thái ---------- */
+const S = {
+  che:"ca", laTruong:false, ten:"", doi:1, baiId:"b2", phut:12, siSo:6, seed:0, van:"",
+  nv:null, xap:[], dat:{}, cam:null, vong:"kin", datKin:null,
+  batDau:0, conLai:0, hetGio:false, daNop:false,
+  banKhac:{}, banTay:{}, ketQua:null
+};
+let dongHo = null;
+
+/* ============================================================
+   KHO DỮ LIỆU CHUNG (chỉ có khi trang chạy trên nền hỗ trợ)
+   ============================================================ */
+let DB = null, ONLINE = false;
+let huyTraLoi = null, huyKQ = null, huyBang = null;
+
+/* ------------------------------------------------------------
+   ĐƯỜNG NỐI GIỮA CÁC MÁY khi trang chạy trên GitHub Pages.
+   Mỗi máy nối cùng lúc tới vài máy chủ MQTT công cộng (qua
+   WebSocket), gửi và nghe trên cùng một "địa chỉ" của trò chơi.
+   Tin nhắn được máy chủ giữ lại (retained) nên máy vào sau vẫn
+   đọc được bản mới nhất. Máy nào hỏng thì còn máy khác.
+   Thêm ?noi=bc vào đường dẫn để chỉ nối các tab trong một trình
+   duyệt (dùng khi thử trên một máy).
+   ------------------------------------------------------------ */
+const MAY_CHU = [
+  {url:"wss://broker.emqx.io:8084/mqtt"},
+  {url:"wss://broker.hivemq.com:8884/mqtt"},
+  {url:"wss://public.cloud.shiftr.io/mqtt", user:"public", pass:"public"}
+];
+const KHONG_GIAN = "hanu-pol1001/ditimlienket/v2/";
+const CHI_BC = /[?&]noi=bc\b/.test(location.search);
+
+function taoMQTT(cfg, onMsg, onState){
+  let ws = null, ok = false, buf = new Uint8Array(0), pid = 0, ping = null, lui = 1000;
+  const subs = new Set(), cho = new Map();
+  const te = new TextEncoder(), td = new TextDecoder();
+  const vlen = n=>{ const o=[]; do{ let b = n % 128; n = Math.floor(n/128); if(n>0) b |= 128; o.push(b); }while(n>0); return o; };
+  const chu = x=>{ const b = te.encode(x); return [b.length>>8, b.length&255].concat(Array.from(b)); };
+  const goi = (h, body)=>{
+    if(!ws || ws.readyState !== 1) return false;
+    ws.send(new Uint8Array([h].concat(vlen(body.length), body))); return true; };
+  const moiId = ()=>{ pid = pid % 65535 + 1; return pid; };
+  function dangKy(f){ const id = moiId(); goi(0x82, [id>>8, id&255].concat(chu(f), [1])); return id; }
+  function ketNoi(){
+    try{ ws = new WebSocket(cfg.url, ["mqtt"]); }catch(e){ henLai(); return; }
+    ws.binaryType = "arraybuffer";
+    ws.onopen = ()=>{
+      let co = 0x02; let pl = chu("dtlk" + Math.random().toString(36).slice(2, 12));
+      if(cfg.user){ co |= 0x80; pl = pl.concat(chu(cfg.user)); }
+      if(cfg.pass){ co |= 0x40; pl = pl.concat(chu(cfg.pass)); }
+      goi(0x10, chu("MQTT").concat([4, co, 0, 30], pl));
+    };
+    ws.onmessage = e=>{
+      const d = new Uint8Array(e.data), n = new Uint8Array(buf.length + d.length);
+      n.set(buf); n.set(d, buf.length); buf = n; tach(); };
+    ws.onclose = ()=>{
+      const truoc = ok; ok = false; ws = null; buf = new Uint8Array(0);
+      clearInterval(ping); cho.forEach(f=>f(false)); cho.clear();
+      if(truoc) onState(); henLai(); };
+    ws.onerror = ()=>{ try{ ws && ws.close(); }catch(e){} };
+  }
+  function henLai(){ setTimeout(ketNoi, lui); lui = Math.min(lui*2, 15000); }
+  function tach(){
+    for(;;){
+      if(buf.length < 2) return;
+      let m = 1, len = 0, i = 1, b;
+      do{ if(i >= buf.length) return; b = buf[i++]; len += (b & 127) * m; m *= 128; }while(b & 128);
+      if(buf.length < i + len) return;
+      const h = buf[0], p = buf.slice(i, i + len); buf = buf.slice(i + len);
+      try{ xuLy(h, p); }catch(e){}
+    }
+  }
+  function xuLy(h, p){
+    const t = h >> 4;
+    if(t === 2){                                   /* CONNACK */
+      if(p[1] === 0){ ok = true; lui = 1000; subs.forEach(dangKy);
+        clearInterval(ping); ping = setInterval(()=>goi(0xC0, []), 25000); onState(); }
+      else { try{ ws.close(); }catch(e){} }
+    } else if(t === 3){                            /* PUBLISH đến */
+      const qos = (h >> 1) & 3, tl = (p[0] << 8) | p[1];
+      const topic = td.decode(p.subarray(2, 2 + tl)); let o = 2 + tl;
+      if(qos > 0){ const id = (p[o] << 8) | p[o+1]; o += 2; goi(0x40, [id>>8, id&255]); }
+      onMsg(topic, td.decode(p.subarray(o)));
+    } else if(t === 4 || t === 9){                 /* PUBACK · SUBACK */
+      const id = (p[0] << 8) | p[1], f = cho.get(id);
+      if(f){ cho.delete(id); f(true); }
+    }
+  }
+  const doi = (id, r, ms)=>{ cho.set(id, r); setTimeout(()=>{ if(cho.delete(id)) r(false); }, ms); };
+  return {
+    get ok(){ return ok; },
+    batDau: ketNoi,
+    sub(f){
+      if(subs.has(f)) return Promise.resolve(true);
+      subs.add(f);
+      if(!ok) return Promise.resolve(false);
+      return new Promise(r=> doi(dangKy(f), r, 4000));
+    },
+    pub(topic, text){
+      return new Promise(r=>{
+        if(!ok) return r(false);
+        const id = moiId();
+        const pl = chu(topic).concat([id>>8, id&255], Array.from(te.encode(text)));
+        if(!goi(0x33, pl)) return r(false);          /* QoS 1, giữ lại */
+        doi(id, r, 6000);
+      });
+    }
+  };
+}
+
+const SYNC = (()=>{
+  const kho = new Map(), nghe = new Set(), may = [];
+  let bc = null, batDauLuc = 0, baoDoi = ()=>{};
+  const dc = p => KHONG_GIAN + p;
+  const khop = (f, t)=>{
+    if(f.endsWith("/+")){ const g = f.slice(0, -1); return t.startsWith(g) && t.length > g.length && !t.slice(g.length).includes("/"); }
+    return f === t; };
+  function nhan(t, text){
+    if(!t.startsWith(KHONG_GIAN) || !text) return;
+    let r; try{ r = JSON.parse(text); }catch(e){ return; }
+    if(!r || typeof r.t !== "number" || typeof r.v !== "object") return;
+    const cu = kho.get(t);
+    if(cu && cu.t >= r.t) return;
+    kho.set(t, r);
+    nghe.forEach(l=>{ if(khop(l.f, t)) try{ l.cb(); }catch(e){} });
+  }
+  const coMay = ()=> CHI_BC || may.some(m=>m.ok);
+  const cho = (dk, ms)=> new Promise(r=>{
+    if(dk()) return r(true);
+    const t0 = Date.now(), iv = setInterval(()=>{
+      if(dk()){ clearInterval(iv); r(true); } else if(Date.now()-t0 > ms){ clearInterval(iv); r(false); } }, 100); });
+  async function sub(f){
+    if(bc) bc.postMessage({k:"hoi", f});
+    await Promise.all(may.map(m=>m.sub(f)));
+  }
+  function snap(p){ const t = dc(p), r = kho.get(t);
+    return {exists: !!r, id: p.split("/").pop(), data: ()=> r ? r.v : undefined}; }
+  async function ghi(p, v){
+    const t = dc(p), tx = JSON.stringify({t: Date.now(), v});
+    if(!coMay()) await cho(coMay, 6000);
+    nhan(t, tx);
+    if(bc) bc.postMessage({k:"pub", t, tx});
+    if(CHI_BC) return;
+    const kq = await Promise.all(may.map(m=>m.pub(t, tx)));
+    if(!kq.some(Boolean)) throw new Error("không gửi được");
+  }
+  async function doc1(p){
+    if(!coMay()) await cho(coMay, 6000);
+    if(!coMay()) throw new Error("chưa nối");
+    const t = dc(p);
+    await sub(t);
+    await cho(()=>kho.has(t), 1200);
+    return snap(p);
+  }
+  function ngheDoc(p, cb){
+    const t = dc(p), l = {f: t, cb: ()=>cb(snap(p))};
+    nghe.add(l); sub(t);
+    if(kho.has(t)) setTimeout(l.cb, 0);
+    return ()=> nghe.delete(l);
+  }
+  function ngheBo(p, cb){
+    const f = dc(p) + "/+", g = f.slice(0, -1);
+    const l = {f, cb: ()=>{ const docs = [];
+      kho.forEach((r, t)=>{ if(khop(f, t)) docs.push({id: t.slice(g.length), data: ()=> r.v}); });
+      cb({docs}); }};
+    nghe.add(l); sub(f); setTimeout(l.cb, 0);
+    return ()=> nghe.delete(l);
+  }
+  return {
+    coMay,
+    dangThu: ()=> !coMay() && Date.now() - batDauLuc < 9000,
+    batDau(onDoi){
+      baoDoi = onDoi || baoDoi; batDauLuc = Date.now();
+      if("BroadcastChannel" in window){
+        bc = new BroadcastChannel("ditimlienket");
+        bc.onmessage = e=>{ const d = e.data || {};
+          if(d.k === "pub") nhan(d.t, d.tx);
+          else if(d.k === "hoi") kho.forEach((r, t)=>{ if(khop(d.f, t)) bc.postMessage({k:"pub", t, tx: JSON.stringify(r)}); }); };
+      }
+      if(!CHI_BC) MAY_CHU.forEach(c=>{ const m = taoMQTT(c, nhan, ()=>baoDoi()); may.push(m); m.batDau(); });
+      setTimeout(()=>baoDoi(), 9500);
+      baoDoi();
+    },
+    doc: p => ({ set: v => ghi(p, v), get: () => doc1(p), onSnapshot: (cb)=> ngheDoc(p, cb) }),
+    collection: p => ({ onSnapshot: (cb)=> ngheBo(p, cb) })
+  };
+})();
+
+async function noiDB(){
+  try{
+    if(window.claude && window.claude.use){
+      const db = await window.claude.use("db");
+      if(db){ DB = db; ONLINE = true; capNhatNet(); return; }
+    }
+  }catch(e){}
+  if(!("WebSocket" in window)){ capNhatNet(); return; }
+  DB = SYNC;
+  SYNC.batDau(()=>{ ONLINE = SYNC.coMay(); capNhatNet(); });
+}
+function capNhatNet(){
+  const dang = DB === SYNC && !ONLINE && SYNC.dangThu();
+  const cham = `<span class="netdot ${ONLINE ? "on" : dang ? "dang" : ""}"></span>`;
+  const el = $("#tr-net");
+  if(el) el.innerHTML = cham + (ONLINE
+    ? "Máy này nối được với máy của các thành viên — họ bấm Nộp là phần của họ hiện thẳng lên đây."
+    : dang ? "Đang nối với máy của các thành viên…"
+    : "Máy này <b>không nối</b> được với máy của các thành viên. Cả nhóm sẽ dùng cách đọc số: các bạn đọc, bạn gõ vào.");
+  const off = $("#bg-off");
+  if(off){ off.hidden = ONLINE;
+    off.innerHTML = "Đọc thêm cho cả nhóm: <b>bài buổi " + (layBai(S.baiId)||{buoi:"?"}).buoi + "</b> · <b>" + S.siSo + " máy</b> · <b>" + S.phut + " phút kín</b>."; }
+  const gop = $("#bg-gop");
+  if(gop) gop.textContent = ONLINE ? "Nhập tay mã (bạn nào không nối được)" : "Nhập tay mã của các bạn";
+  const vb = $("#v-offbox");
+  if(vb && $("#s-vao").classList.contains("on")) vb.hidden = ONLINE || dang;
+}
+function goc(){ return "phong/nhom" + S.doi; }
+function dungNghe(){ [huyTraLoi, huyKQ, huyBang].forEach(f=>{ try{ if(f) f(); }catch(e){} });
+  huyTraLoi = huyKQ = huyBang = null; }
+
+/* ============================================================
+   ĐIỀU HƯỚNG
+   ============================================================ */
+function show(id){
+  $$(".screen").forEach(e=>e.classList.remove("on"));
+  $("#s-"+id).classList.add("on");
+  window.scrollTo({top:0,behavior:"instant"});
+}
+$$("[data-home]").forEach(b=>b.onclick = ()=>{ dungDongHo(); dungNghe(); show("home"); });
+
+function veDoi(el, chon, onPick){
+  el.innerHTML = DOI.map(d=>`
+    <button class="team" data-so="${d.so}" aria-pressed="${d.so===chon}" style="color:${d.mau}">
+      <svg><use href="#i-vo"/></svg><span class="vno">${d.so}</span>
+      <span class="tn">${esc(d.ten)}</span></button>`).join("");
+  el.onclick = e=>{ const b=e.target.closest(".team"); if(!b) return;
+    Array.from(el.children).forEach(c=>c.setAttribute("aria-pressed", c===b));
+    onPick(Number(b.dataset.so)); };
+}
+function veBai(sel, chon){
+  sel.innerHTML = BAI.map(b=>{
+    const n = b.that.length + b.gia.length;
+    return `<option value="${b.id}" ${b.id===chon?"selected":""}>Buổi ${b.buoi} — ${esc(b.ten)} (${n} mảnh)</option>`;
+  }).join("");
+}
+function vePhut(sel, chon){
+  sel.innerHTML = PHUT.map(v=>`<option value="${v}" ${v===chon?"selected":""}>${v} phút kín + ${MO} phút mở</option>`).join("");
+}
+
+/* ============================================================
+   CHƠI MỘT MÌNH
+   ============================================================ */
+$("#go-ca").onclick = ()=>{
+  S.che="ca"; S.laTruong=false; S.nv=null;
+  veDoi($("#ca-doi"), S.doi, v=>S.doi=v);
+  veBai($("#ca-bai"), S.baiId); vePhut($("#ca-phut"), S.phut);
+  moTaCa(); show("ca");
+};
+function moTaCa(){
+  const bai = layBai($("#ca-bai").value), p = Number($("#ca-phut").value);
+  $("#ca-mota").textContent = `${bai.that.length} mảnh thật + ${bai.gia.length} mảnh giả · tối đa ${bai.that.length+2} điểm`
+    + ` · ${p} phút kín rồi ${MO} phút mở tài liệu`;
+}
+$("#ca-bai").onchange = ()=>{ vePhut($("#ca-phut"), layBai($("#ca-bai").value).phut); moTaCa(); };
+$("#ca-phut").onchange = moTaCa;
+$("#ca-start").onclick = ()=>{
+  S.che="ca"; S.laTruong=false; S.nv=null;
+  S.ten = ($("#ca-ten").value||"").trim() || "Ẩn danh";
+  S.baiId = $("#ca-bai").value; S.phut = Number($("#ca-phut").value);
+  S.seed = Math.floor(Math.random()*900)+100;
+  S.xap = deck(layBai(S.baiId), S.seed);
+  S.dat = {}; S.cam = null; S.banKhac = {}; S.daNop = false; S.ketQua = null;
+  chuanBiManChoi(); batDauVan(true); show("play"); veSan();
+};
+
+/* ============================================================
+   ĐỘI TRƯỞNG MỞ PHÒNG
+   ============================================================ */
+$("#go-truong").onclick = ()=>{
+  S.che="nhom"; S.laTruong=true;
+  veDoi($("#tr-doi"), S.doi, v=>{ S.doi=v; veChip(); moTaChia(); });
+  veBai($("#tr-bai"), S.baiId); vePhut($("#tr-phut"), S.phut);
+  veChip(); moTaChia(); show("truong");
+};
+function veChip(){
+  const nv = danNV(S.doi, 2)[0];
+  $("#tr-chip").innerHTML = `<span class="av"><svg style="color:${nv.hex}"><use href="${nv.sym}"/></svg></span>
+    <span><span class="r1">Nhân vật của bạn</span><span class="r2">${esc(nv.ten)}</span></span>`;
+}
+function moTaChia(){
+  const bai = layBai($("#tr-bai").value);
+  const n = bai.that.length + bai.gia.length;
+  const si = Math.max(2, Math.min(8, Number($("#tr-siso").value)||6));
+  const p = Number($("#tr-phut").value);
+  $("#tr-chia").innerHTML = `${n} mảnh chia cho ${si} bạn cầm máy: <b>${esc(chiaChu(n,si))}</b>. `
+    + `Tối đa <b>${bai.that.length+2} điểm</b> · ${p} phút kín rồi ${MO} phút mở tài liệu.`;
+}
+$("#tr-bai").onchange = ()=>{ vePhut($("#tr-phut"), layBai($("#tr-bai").value).phut); moTaChia(); };
+$("#tr-phut").onchange = moTaChia;
+$("#tr-siso").oninput = moTaChia;
+
+$("#tr-tao").onclick = async ()=>{
+  S.che="nhom"; S.laTruong=true;
+  S.ten = ($("#tr-ten").value||"").trim() || "Đội trưởng";
+  S.baiId = $("#tr-bai").value;
+  S.phut = Number($("#tr-phut").value);
+  S.siSo = Math.max(2, Math.min(8, Number($("#tr-siso").value)||6));
+  /* hạt giống cố định theo bài · nhóm · số máy, để máy nào lỡ mất kết nối vẫn nhận đúng xấp mảnh */
+  S.seed = bam(S.baiId+"|"+S.doi+"|"+S.siSo);
+  S.van = Date.now().toString(36);
+  S.nv = danNV(S.doi, S.siSo)[0];
+  S.banKhac = {}; S.banTay = {}; S.dat = {}; S.cam = null; S.daNop = false; S.ketQua = null;
+  const xaps = chia(deck(layBai(S.baiId), S.seed), S.siSo);
+  S.xap = xaps[0] || [];
+  dungNghe();
+  if(DB){
+    try{
+      await DB.doc(goc()).set({van:S.van, baiId:S.baiId, phut:S.phut, siSo:S.siSo,
+        seed:S.seed, batDau:Date.now(), tenTruong:S.ten, mo:true});
+    }catch(e){ ONLINE = false; }
+    ngheTraLoi();
+    $("#tr-net") && capNhatNet();
+  }
+  $("#bg-ma").textContent = "NHÓM " + S.doi;
+  $("#bg-hoi").textContent = layBai(S.baiId).hoi;
+  $("#bg-gop").hidden = false;
+  capNhatNet();
+  batDauVan(true); show("bang"); veSan();
+};
+
+function ngheTraLoi(){
+  if(!DB) return;
+  try{
+    huyTraLoi = DB.collection(goc()+"/traloi").onSnapshot(snap=>{
+      const m = {};
+      (snap.docs||[]).forEach(d=>{ const r = d.data(); if(r && r.van === S.van) m[d.id] = r; });
+      S.banKhac = Object.assign({}, S.banTay, m);
+      if($("#s-bang").classList.contains("on")) veSan();
+      if($("#s-cho").classList.contains("on")) veSan();
+    }, ()=>{});
+  }catch(e){}
+}
+
+/* ============================================================
+   THÀNH VIÊN VÀO PHÒNG
+   ============================================================ */
+let VCHON = null, VPHONG = null;
+$("#go-vao").onclick = ()=>{
+  S.che="nhom"; S.laTruong=false; VCHON = null; VPHONG = null;
+  $("#v-loi").textContent = "";
+  veBai($("#v-bai"), S.baiId);
+  $("#v-offbox").hidden = ONLINE || (DB === SYNC && SYNC.dangThu());
+  veNhanVat(); show("vao");
+};
+function docNhom(){
+  /* nhận "NHÓM 1", "nhom1", "Nhóm 1" hay chỉ "1" — chỉ lấy con số */
+  const so = ($("#v-ma").value||"").replace(/[^0-9]/g, "");
+  const n = Number(so);
+  return (so.length === 1 && n >= 1 && n <= 4) ? n : 0;
+}
+async function veNhanVat(){
+  const g = $("#v-nv"), ghi = $("#v-nvghi"), n = docNhom();
+  if(!n){
+    g.innerHTML = ""; VCHON = null; VPHONG = null;
+    ghi.innerHTML = "Gõ mã đội trưởng vừa đọc — <b>NHÓM 1</b> đến <b>NHÓM 4</b>. Dàn nhân vật của nhóm bạn sẽ hiện ra ngay.";
+    return;
+  }
+  S.doi = n;
+  let siSo = Math.max(2, Math.min(8, Number($("#v-siso").value)||6));
+  if(DB){
+    try{
+      const sn = await DB.doc("phong/nhom"+n).get();
+      const ph = sn.exists ? (sn.data() || {}) : {};
+      /* phòng cũ từ buổi trước (quá giờ chơi + 20 phút) coi như chưa mở */
+      const cu = !ph.batDau || Date.now() - ph.batDau > ((ph.phut||15) + MO + 20) * 60000;
+      if(!sn.exists || !ph.mo || cu){
+        g.innerHTML = ""; VPHONG = null;
+        ghi.innerHTML = `<b>Nhóm ${n} chưa mở phòng.</b> Chờ đội trưởng bấm Mở phòng rồi gõ lại mã.`;
+        return;
+      }
+      VPHONG = sn.data(); siSo = VPHONG.siSo;
+    }catch(e){ VPHONG = null; }
+  }
+  const dan = danNV(n, siSo);
+  if(!dan.some(x=>x.id===VCHON)) VCHON = null;
+  g.innerHTML = dan.map(nv=>`
+    <button class="nv ${nv.truong?"truong":""}" data-id="${nv.id}" aria-pressed="${nv.id===VCHON}"
+      ${nv.truong?"disabled":""} style="color:${nv.hex}">
+      <svg><use href="${nv.sym}"/></svg>
+      <span class="nvt">${esc(nv.ten)}</span>
+      <span class="nvm">${nv.truong?"đội trưởng":"thành viên"}</span></button>`).join("");
+  g.onclick = e=>{ const b = e.target.closest(".nv"); if(!b || b.disabled) return;
+    VCHON = b.dataset.id;
+    Array.from(g.children).forEach(x=>x.setAttribute("aria-pressed", x===b));
+    $("#v-loi").textContent = ""; };
+  ghi.innerHTML = `Nhóm ${n} · <b>${esc(TO[n-1].to)}</b> — mỗi nhóm một tổ nhân vật riêng, mỗi bạn một màu. `
+    + `Nhân vật đội trưởng (<b>${esc(dan[0].ten)}</b>) đã có chủ. ` + GHI_NGOAI;
+}
+$("#v-ma").oninput = veNhanVat;
+$("#v-siso").oninput = veNhanVat;
+
+$("#v-vao").onclick = ()=>{
+  const n = docNhom();
+  if(!n){ $("#v-loi").textContent = "Mã chưa đúng. Gõ NHÓM 1, NHÓM 2, NHÓM 3 hoặc NHÓM 4 — gõ mỗi con số cũng được."; return; }
+  if(ONLINE && !VPHONG){ $("#v-loi").textContent = `Nhóm ${n} chưa mở phòng. Chờ đội trưởng một chút rồi bấm lại.`; return; }
+  if(!VCHON){ $("#v-loi").textContent = "Chọn một nhân vật đã — và nhớ hỏi to xem có bạn nào lấy trùng không."; return; }
+  S.che="nhom"; S.laTruong=false; S.doi = n;
+  if(VPHONG){
+    S.baiId = VPHONG.baiId; S.phut = VPHONG.phut; S.siSo = VPHONG.siSo;
+    S.seed = VPHONG.seed; S.van = VPHONG.van; S.batDau = VPHONG.batDau || Date.now();
+  } else {
+    S.baiId = $("#v-bai").value;
+    S.siSo = Math.max(2, Math.min(8, Number($("#v-siso").value)||6));
+    S.phut = layBai(S.baiId).phut; S.van = "off";
+    S.seed = bam(S.baiId+"|"+S.doi+"|"+S.siSo);
+    S.batDau = Date.now();
+  }
+  const nv = timNV(S.doi, S.siSo, VCHON);
+  if(!nv){ $("#v-loi").textContent = "Nhân vật này không có trong nhóm. Chọn lại giúp mình."; return; }
+  S.nv = nv;
+  kiemTraTrung(nv);
+  S.ten = ($("#v-ten").value||"").trim() || nv.ten;
+  S.xap = chia(deck(layBai(S.baiId), S.seed), S.siSo)[nv.k] || [];
+  S.dat = {}; S.cam = null; S.banKhac = {}; S.daNop = false; S.ketQua = null;
+  dungNghe(); ngheKetQua();
+  chuanBiManChoi(); batDauVan(); show("play"); veSan();
+};
+
+async function kiemTraTrung(nv){
+  if(!DB || S.van === "off") return;
+  try{
+    const sn = await DB.doc(goc()+"/traloi/"+nv.id).get();
+    if(sn.exists && (sn.data()||{}).van === S.van){
+      const el = $("#p-huong");
+      if(el) el.innerHTML = `<span class="bad"><b>Có bạn khác đã nộp bằng nhân vật ${esc(nv.ten)} rồi.</b></span> `
+        + `Hỏi to xem ai đang cầm nhân vật này — nếu bạn nộp tiếp, phần của bạn ấy sẽ bị đè mất. `
+        + `Muốn đổi thì bấm Thoát rồi vào lại phòng.`;
+    }
+  }catch(e){}
+}
+function ngheKetQua(){
+  if(!DB || S.van === "off") return;
+  try{
+    huyKQ = DB.doc(goc()+"/kq").onSnapshot(sn=>{
+      if(!sn.exists) return;
+      const r = sn.data();
+      if(!r || !r.vt || (r.van && r.van !== S.van)) return;
+      if(S.ketQua && S.ketQua.luc === r.luc) return;
+      dungDongHo();
+      S.ketQua = r;
+      const bai = layBai(S.baiId), sua = r.sua || {};
+      hienKetQua(cham(bai, r.vt), r.giay, sua, (Object.keys(sua).length && r.vtKin) ? cham(bai, r.vtKin) : null);
+    }, ()=>{});
+  }catch(e){}
+}
+
+/* ============================================================
+   ĐỒNG HỒ
+   ============================================================ */
+function batDauVan(moi){
+  S.hetGio = false; S.vong = "kin"; S.datKin = null;
+  if(moi || !S.batDau) S.batDau = Date.now();
+  chayDongHo();
+}
+function chayDongHo(){
+  dungDongHo();
+  tick();
+  dongHo = setInterval(tick, 1000);
+}
+/* Hết vòng kín: chụp lại vị trí lúc đó. Từ giờ, mảnh nào khác ảnh chụp là "sửa bằng bút đỏ". */
+function vaoVongMo(){
+  S.vong = "mo";
+  S.datKin = Object.assign({}, S.dat);
+  if(["#s-play","#s-bang","#s-cho"].some(q=>$(q).classList.contains("on"))) veSan();
+}
+function tick(){
+  const troi = Math.floor((Date.now() - S.batDau)/1000);
+  const hetKin = S.phut*60, hetMo = hetKin + MO*60;
+  if(troi >= hetKin && S.vong !== "mo") vaoVongMo();
+  const mo = S.vong === "mo";
+  S.conLai = hetMo - troi;
+  const s = phutGiay(Math.max(0, (mo ? hetMo : hetKin) - troi));
+  ["#bang-clk","#bg-clk","#ch-clk"].forEach(q=>{ const e=$(q); if(e) e.textContent = s; });
+  const gap = !mo && hetKin - troi <= 60, thu = S.conLai <= 0;
+  [["#bang","#bang-tx"],["#bg-bang","#bg-tx"],["#ch-bang","#ch-tx"]].forEach(([a,b])=>{
+    const el=$(a), tx=$(b); if(!el||!tx) return;
+    el.className = "chang " + (mo ? "c3" : gap ? "c2" : "c1");
+    el.querySelector("use").setAttribute("href", mo ? "#i-so" : gap ? "#i-phan" : "#i-trong");
+    tx.textContent = thu ? "Hết giờ — đang thu bài"
+      : a === "#ch-bang"
+        ? (mo ? "Vòng mở · muốn sửa thì bấm Nộp lại" : gap ? "Còn một phút vòng kín — nhắc bạn nào chưa nộp" : "Đã gửi cho đội trưởng")
+        : (mo ? "Vòng mở · được mở tài liệu · mảnh nào sửa sẽ hiện màu đỏ"
+              : gap ? "Còn một phút vòng kín — bình tĩnh, sắp bừa còn tệ hơn để nguyên" : "Vòng kín · không mở tài liệu nhé");
+  });
+  /* đội trưởng chờ thêm 5 giây để bài tự nộp của các bạn kịp về */
+  const han = S.laTruong ? hetMo + 5 : hetMo;
+  if(troi >= han && !S.hetGio){
+    S.hetGio = true; dungDongHo();
+    if(S.laTruong || S.che === "ca") chotBai();
+    else if(!S.daNop) nopBai();
+  }
+}
+function dungDongHo(){ if(dongHo){ clearInterval(dongHo); dongHo = null; } }
+function giayDaDung(){ return Math.max(0, Math.min((S.phut+MO)*60, Math.floor((Date.now()-S.batDau)/1000))); }
+function phutGiay(g){ return String(Math.floor(g/60)).padStart(2,"0") + ":" + String(g%60).padStart(2,"0"); }
+
+/* ============================================================
+   SÂN CHƠI — khay mảnh, ô trống, thùng loại
+   ============================================================ */
+function chuanBiManChoi(){
+  const bai = layBai(S.baiId), d = DOI[S.doi-1];
+  $("#p-hoi").textContent = bai.hoi;
+  $("#p-doi").textContent = S.che === "nhom" ? d.ten : "Ôn một mình";
+  $("#p-doi").style.color = S.che === "nhom" ? d.mau : "";
+  const nv = S.nv;
+  $("#p-vai").textContent = nv ? (S.ten && S.ten !== nv.ten ? nv.ten + " · " + S.ten : nv.ten) : S.ten;
+  $("#p-vai").style.color = nv ? nv.hex : "";
+  $("#p-nop").textContent = S.che === "nhom" ? "Nộp cho đội trưởng" : "Chấm bài";
+  $("#p-huong").innerHTML = S.che === "nhom"
+    ? `Bạn sở hữu <b>${S.xap.length}/${bai.that.length + bai.gia.length} mảnh ghép</b>. Không ai thấy mảnh của bạn, và bạn không thấy mảnh của ai — muốn biết ô nào còn trống thì <b>phải tương tác nhóm</b>.`
+    : `Bạn cầm <b>toàn bộ ${S.xap.length} mảnh</b>. Đặt ${bai.that.length} mảnh thật vào đúng ô, ném <b>${bai.gia.length} mảnh giả</b> vào thùng loại.`;
+}
+function tienTo(){
+  if($("#s-bang").classList.contains("on")) return "bg";
+  if($("#s-cho").classList.contains("on"))  return "ch";
+  return "p";
+}
+function nvCuaToi(){ return S.nv || {ten:"Bạn", hex:"var(--muc)", sym:"#i-giay"}; }
+
+/* gom toàn bộ vị trí đang thấy: của mình + của bạn khác (nếu được xem) */
+function banDo(xemDoi){
+  const map = {};                       /* uid -> {pos, nv, tx, cuaToi, sua} */
+  const bai = layBai(S.baiId), tat = {};
+  tatCaManh(bai).forEach(m=> tat[m.uid] = m);
+  if(xemDoi){
+    Object.keys(S.banKhac).forEach(k=>{
+      const r = S.banKhac[k], nv = timNV(S.doi, S.siSo, r.nvId) || {ten:r.nvTen, hex:r.hex};
+      Object.keys(r.dat||{}).forEach(uid=>{
+        map[uid] = {pos: r.dat[uid], nv, ten: r.ten || "", tx: (tat[uid]||{}).tx || "", cuaToi:false,
+          sua: !!(r.kin && r.kin[uid] !== r.dat[uid])};
+      });
+    });
+  }
+  const me = nvCuaToi();
+  Object.keys(S.dat).forEach(uid=>{
+    map[uid] = {pos: S.dat[uid], nv: me, ten: S.ten || "", tx: (tat[uid]||{}).tx || "", cuaToi:true,
+      sua: !!(S.datKin && S.datKin[uid] !== S.dat[uid])};
+  });
+  return map;
+}
+
+function veSan(){
+  const pre = tienTo();
+  const bai = layBai(S.baiId);
+  const nThat = bai.that.length;
+  const tuongTac = (pre !== "ch") && !(pre === "bg" && S.ketQua);
+  const xemDoi = (pre !== "p") && S.che === "nhom";
+  const map = banDo(xemDoi);
+  const me = nvCuaToi();
+
+  /* --- dàn nhân vật / tiến độ --- */
+  const dn = (pre === "p") ? null : $("#"+pre+"-doingu");
+  if(dn && S.che === "nhom"){
+    const dan = danNV(S.doi, S.siSo);
+    const xong = id => (id === (S.nv||{}).id)
+      ? (S.daNop || (S.laTruong && Object.keys(S.dat).length > 0))
+      : !!S.banKhac[id];
+    dn.innerHTML = `<div class="dn">` + dan.map(nv=>`
+      <span class="dnv ${xong(nv.id)?"xong":""}" style="color:${nv.hex}">
+        <svg><use href="${nv.sym}"/></svg>
+        <span><span class="nm">${esc(nv.ten)}</span>
+        <span class="st">${xong(nv.id) ? "đã nộp" : "đang xếp"}</span></span></span>`).join("") + `</div>`;
+  }
+
+  /* --- mảnh đang cầm --- */
+  const cam = $("#"+pre+"-cam");
+  if(cam){
+    const m = S.xap.find(x=>x.uid === S.cam);
+    cam.hidden = !m || !tuongTac;
+    if(m && tuongTac) cam.innerHTML = `<svg style="color:${me.hex}"><use href="${me.sym}"/></svg>
+      <span class="t"><span class="lb">Đang cầm — chọn ô để đặt</span>${esc(m.tx)}</span>
+      <button data-thoi="1">Bỏ cầm</button>`;
+  }
+
+  /* --- khay mảnh chưa đặt --- */
+  const khay = $("#"+pre+"-khay");
+  if(khay){
+    const con = S.xap.filter(m=> S.dat[m.uid] === undefined);
+    khay.innerHTML = !tuongTac ? "" : `<div class="sec"><h3>Số mảnh ghép đang có:
+        <span class="cnt">${con.length}/${S.xap.length}, chưa ghép</span></h3>
+      <p class="hint">${con.length ? "Chạm vào mảnh ghép rồi chạm vào ô thứ tự." : "Đã ghép hết. Xem lại một lượt rồi nộp."}</p>
+      <div class="khay">${con.map(m=>`
+        <button class="mn" data-manh="${m.uid}" aria-pressed="${m.uid===S.cam}" style="border-left-color:${me.hex}">
+          <svg class="ic" style="color:${me.hex}"><use href="${me.sym}"/></svg>
+          <span class="tx">${esc(m.tx)}</span></button>`).join("")}</div></div>`;
+  }
+
+  /* --- không gian câu trả lời --- */
+  const slot = $("#"+pre+"-slot");
+  if(slot){
+    let h = `<div class="sec"><h3>Không gian câu trả lời
+      <span class="cnt">${nThat} ô</span></h3>
+      <p class="hint">${xemDoi ? "Bạn nào nộp, đáp án hiện ngay kèm tên và hình nhân vật của bạn ấy — chữ màu gì là của nhân vật màu đó." : "Bạn chỉ thấy mảnh của mình. Muốn biết ô nào còn trống thì phải hỏi to."}${S.vong === "mo" ? " Chữ đỏ gạch sóng là mảnh đặt lại ở vòng mở." : ""}</p>
+      <div class="slots">`;
+    /* không gian chung: tên + hình nhân vật của người nộp nằm ngoài số thứ tự, đầu mỗi đáp án */
+    const chip = c=>{
+      const ten2 = c.ten && c.ten !== c.nv.ten ? c.ten : "";
+      return `<span class="ai" style="color:${c.nv.hex}" title="${esc(c.nv.ten + (ten2 ? " · " + ten2 : ""))}">
+        <svg><use href="${c.nv.sym || "#i-giay"}"/></svg>
+        <span class="aw"><span class="an">${esc(c.nv.ten)}${c.cuaToi ? " (bạn)" : ""}</span>${ten2 ? `<span class="ah">${esc(ten2)}</span>` : ""}</span></span>`;
+    };
+    for(let i=1;i<=nThat;i++){
+      const co = Object.keys(map).filter(u=> map[u].pos === i);
+      if(!co.length){
+        h += `<button class="sl ${tuongTac && S.cam ? "can":""}" data-o="${i}" ${tuongTac?"":"disabled"}>
+          ${xemDoi ? `<span class="ais"><span class="ai trong">chưa ai nộp</span></span>` : ""}
+          <span class="no">${i}</span><span class="body"><span class="em">${tuongTac && S.cam ? "đặt mảnh đang cầm vào đây" : "còn trống"}</span></span></button>`;
+      } else {
+        const dup = co.length > 1;
+        h += `<div class="sl full ${dup?"dup":""}" style="border-left-color:${map[co[0]].nv.hex}">` +
+          (xemDoi ? `<span class="ais">${co.map(u=>chip(map[u])).join("")}</span>` : "") +
+          `<span class="no">${i}</span><span class="body">` +
+          co.map(u=>{ const c = map[u];
+            const nhan = xemDoi
+              ? (c.sua ? `<span class="who"><span class="but" style="margin-left:0">bút đỏ · vòng mở</span></span>` : "")
+              : `<span class="who" style="color:${c.nv.hex}">${esc(c.nv.ten)}${c.cuaToi?" · bạn":""}${c.sua?'<span class="but">bút đỏ · vòng mở</span>':""}</span>`;
+            return `<span class="bl" style="display:block">${nhan}<span class="tx${c.sua?" sua":""}" style="color:${c.nv.hex}">${esc(c.tx)}</span>` +
+              (c.cuaToi && tuongTac ? ` <button class="lift" data-nhac="${u}">nhấc ra</button>` : "") + `</span>`;
+          }).join("") +
+          (dup ? `<span class="cha">Hai bạn cùng chọn ô này — phải nói chuyện để nhường nhau.</span>` : "") +
+          `</span></div>`;
+      }
+    }
+    slot.innerHTML = h + `</div></div>`;
+  }
+
+  /* --- thùng loại --- */
+  const thung = $("#"+pre+"-thung");
+  if(thung){
+    const bo = Object.keys(map).filter(u=> map[u].pos === 0);
+    thung.innerHTML = `<div class="thung ${tuongTac && S.cam ? "can":""}">
+      <h3>Nơi chứa mảnh ghép “giả” <span class="cnt">${bo.length} mảnh</span></h3>
+      <p class="hint">Tìm và loại được toàn bộ ${bai.gia.length} mảnh — ${S.che === "nhom" ? "cả nhóm" : "bạn"} +2 điểm.</p>
+      ${tuongTac && S.cam ? `<button class="btn sm red" data-thung="1" style="margin-top:8px">Đưa mảnh đang cầm vào đây</button>` : ""}
+      ${bo.length ? `<div class="khay">${bo.map(u=>{ const c = map[u];
+        return `<button class="mn" ${c.cuaToi && tuongTac ? `data-nhac="${u}"` : "disabled"} style="border-left-color:${c.nv.hex}">
+          <svg class="ic" style="color:${c.nv.hex}"><use href="${c.nv.sym||me.sym}"/></svg>
+          <span class="tx"><span class="who" style="color:${c.nv.hex}">${esc(c.nv.ten)}${c.cuaToi?" · bạn":""}${c.sua?'<span class="but">bút đỏ</span>':""}</span><span class="${c.sua?"sua":""}">${esc(c.tx)}</span></span></button>`;
+      }).join("")}</div>` : ""}</div>`;
+  }
+
+  if(tuongTac) noiDay(pre);
+}
+
+function noiDay(pre){
+  const goi = e=>{
+    const t = e.target.closest("[data-manh],[data-o],[data-thung],[data-nhac],[data-thoi]");
+    if(!t) return;
+    if(t.dataset.thoi){ S.cam = null; }
+    else if(t.dataset.manh){ S.cam = (S.cam === t.dataset.manh) ? null : t.dataset.manh; }
+    else if(t.dataset.nhac){ delete S.dat[t.dataset.nhac]; S.cam = t.dataset.nhac; }
+    else if(t.dataset.o){ if(!S.cam) return; S.dat[S.cam] = Number(t.dataset.o); S.cam = null; }
+    else if(t.dataset.thung){ if(!S.cam) return; S.dat[S.cam] = 0; S.cam = null; }
+    veSan();
+  };
+  ["-cam","-khay","-slot","-thung"].forEach(sfx=>{ const el = $("#"+pre+sfx); if(el) el.onclick = goi; });
+}
+
+/* ============================================================
+   NỘP BÀI — THÀNH VIÊN
+   ============================================================ */
+$("#p-nop").onclick = ()=> nopBai();
+$("#ch-sua").onclick = ()=>{ S.daNop = false; if(!S.hetGio) chayDongHo(); show("play"); veSan(); };
+
+async function nopBai(){
+  if(S.che === "ca"){ chotBai(); return; }
+  S.daNop = true;
+  if(DB && S.van !== "off"){
+    try{
+      const rec = {van:S.van, nvId:S.nv.id, nvTen:S.nv.ten, hex:S.nv.hex,
+        ten:S.ten, dat:S.dat, vong:S.vong, luc:Date.now()};
+      if(S.vong === "mo") rec.kin = S.datKin || {};   /* để máy đội trưởng tô đỏ mảnh sửa ở vòng mở */
+      await DB.doc(goc()+"/traloi/"+S.nv.id).set(rec);
+      $("#ch-nv").textContent = (S.ten && S.ten !== S.nv.ten) ? S.nv.ten + " · " + S.ten : S.nv.ten;
+      dungNghe(); ngheTraLoi(); ngheKetQua();
+      show("cho"); veSan();
+      return;
+    }catch(e){ /* rơi xuống cách đọc số */ }
+  }
+  const so = S.xap.map(m=>{ const v = S.dat[m.uid]; return v === undefined ? "-" : v; });
+  $("#c-nv").textContent = S.nv ? S.nv.ten : "Bạn";
+  $("#c-ma").textContent = so.join(".");
+  $("#c-giai").innerHTML = S.xap.map((m,i)=>{
+    const v = S.dat[m.uid];
+    return `<b class="mono">${i+1}.</b> ${esc(m.tx.slice(0,40))}${m.tx.length>40?"…":""} → ${
+      v===undefined ? '<span class="muted">chưa đặt</span>' : v===0 ? '<span class="bad">thùng loại</span>' : 'ô <b>'+v+'</b>'}`;
+  }).join("<br>");
+  $("#c-hetgio").hidden = !S.hetGio;
+  $("#c-sua").hidden = S.hetGio;
+  show("code");
+}
+$("#c-sua").onclick = ()=>{ if(S.hetGio) return; S.daNop = false; show("play"); veSan(); };
+
+/* ============================================================
+   NHẬP TAY (khi không nối được máy)
+   ============================================================ */
+$("#bg-gop").onclick = ()=>{
+  const xaps = chia(deck(layBai(S.baiId), S.seed), S.siSo);
+  const dan = danNV(S.doi, S.siSo);
+  $("#g-list").innerHTML = dan.slice(1).map((nv,idx)=>{
+    const i = idx+1, x = xaps[i] || [];
+    return `<div class="card"><label class="f">
+      <span style="display:inline-flex;align-items:center;gap:8px">
+        <svg style="width:22px;height:22px;color:${nv.hex}"><use href="${nv.sym}"/></svg>
+        <b>${esc(nv.ten)}</b> <span class="small muted">· ${x.length} số</span></span>
+      <input type="text" class="gcode" data-k="${i}" placeholder="${x.map(()=>"-").join(".")}"
+        style="font-family:'IBM Plex Mono',monospace" autocomplete="off"></label></div>`;
+  }).join("");
+  $("#g-loi").textContent = ""; show("gop");
+};
+$("#g-cham").onclick = ()=>{
+  const xaps = chia(deck(layBai(S.baiId), S.seed), S.siSo);
+  const dan = danNV(S.doi, S.siSo);
+  const moi = {}; let loi = "";
+  $$(".gcode").forEach(inp=>{
+    const k = Number(inp.dataset.k), xap = xaps[k] || [], nv = dan[k];
+    const raw = (inp.value||"").trim().replace(/\s/g,"");
+    if(!raw) return;
+    const so = raw.split(".");
+    if(so.length !== xap.length){ loi = `${nv.ten} cầm ${xap.length} mảnh nên phải có ${xap.length} số, bạn vừa gõ ${so.length}.`; return; }
+    const dat = {};
+    so.forEach((x,j)=>{ const v = parseInt(x,10); if(Number.isFinite(v)) dat[xap[j].uid] = v; });   /* "-" = chưa đặt */
+    moi[nv.id] = {van:S.van, nvId:nv.id, nvTen:nv.ten, hex:nv.hex, ten:nv.ten, dat};
+  });
+  if(loi){ $("#g-loi").textContent = loi; return; }
+  S.banTay = Object.assign({}, S.banTay, moi);
+  S.banKhac = Object.assign({}, S.banKhac, moi);
+  show("bang"); veSan();
+};
+
+/* ============================================================
+   CHẤM ĐIỂM
+   ============================================================ */
+function cham(bai, vt){
+  const nThat = bai.that.length, nGia = bai.gia.length;
+  let dung = 0, sot = 0, loai = 0;
+  const chiTiet = [];
+  for(let i=0;i<nThat;i++){
+    const u = "t"+i, v = vt[u];
+    const ok = (v === i+1);
+    if(ok) dung++;
+    let dangO = null;
+    Object.keys(vt).forEach(k=>{ if(vt[k] === i+1) dangO = k; });
+    chiTiet.push({vt:i+1, uid:u, ok, dat:v, dangO});
+  }
+  const giaCT = [];
+  for(let i=0;i<nGia;i++){
+    const u = "g"+i, v = vt[u];
+    /* barem mốc 3: mảnh giả lọt vào khung −1; thưởng +2 chỉ khi cả bốn nằm trong thùng —
+       mảnh chưa ai đặt không bị trừ, nhưng cũng không tính là đã loại */
+    const tt = v > 0 ? "sot" : v === 0 ? "loai" : "chua";
+    if(tt === "sot") sot++;
+    if(tt === "loai") loai++;
+    giaCT.push({uid:u, tt, tx:bai.gia[i][0], giai:bai.gia[i][1]});
+  }
+  const thuong = (loai === nGia) ? 2 : 0;
+  const diem = dung - sot + thuong;
+  const toiDa = nThat + 2;
+  const tyLe = Math.max(0, diem) / toiDa;
+  const xl = XEP.find(x=>tyLe >= x.min) || XEP[XEP.length-1];
+  return {bai, diem, toiDa, dung, nThat, sot, loai, nGia, thuong, tyLe, xl, chiTiet, giaCT, vt};
+}
+
+$("#bg-chot").onclick = ()=> chotBai();
+
+async function chotBai(){
+  dungDongHo();
+  const bai = layBai(S.baiId);
+  /* vt: vị trí lúc chốt · vtKin: vị trí lúc hết vòng kín · sua: mảnh đặt lại ở vòng mở (bút đỏ).
+     Mảnh chưa ai đặt thì không có trong vt — khác với mảnh đã ném vào thùng (0). */
+  const vt = {}, vtKin = {}, sua = {};
+  const gop = (dat, kin)=>{
+    dat = dat || {};
+    Object.keys(dat).forEach(u=>{ vt[u] = dat[u]; if(kin && kin[u] !== dat[u]) sua[u] = 1; });
+    const nen = kin || dat;
+    Object.keys(nen).forEach(u=>{ vtKin[u] = nen[u]; });
+  };
+  if(S.che === "nhom") Object.keys(S.banKhac).forEach(k=>{ const r = S.banKhac[k]; gop(r.dat, r.kin); });
+  gop(S.dat, S.datKin);
+  const giay = giayDaDung();
+  const kq = cham(bai, vt), kqKin = Object.keys(sua).length ? cham(bai, vtKin) : null;
+  S.ketQua = {vt, giay};
+  if(DB && S.che === "nhom" && S.laTruong && S.van !== "off"){
+    const rec = {doi:S.doi, ten:"Nhóm "+S.doi, to:TO[S.doi-1].to, diem:kq.diem,
+      diemKin:(kqKin || kq).diem, toiDa:kq.toiDa, phut:S.phut, giay, buoi:bai.buoi, bai:bai.ten,
+      danhHieu:kq.xl.dh, luc:Date.now(), van:S.van};
+    try{ await DB.doc("bangvang/nhom"+S.doi).set(rec); }catch(e){}
+    try{ await DB.doc(goc()+"/kq").set({van:S.van, vt, vtKin, sua, giay, luc:Date.now()}); }catch(e){}
+  }
+  hienKetQua(kq, giay, sua, kqKin);
+}
+
+/* ============================================================
+   KẾT QUẢ + BẢNG THÀNH TÍCH
+   ============================================================ */
+function hienKetQua(kq, giay, sua, kqKin){
+  dungDongHo();
+  sua = sua || {};
+  const soSua = Object.keys(sua).length, ai = S.che === "nhom" ? "nhóm" : "bạn";
+  const bai = kq.bai;
+  const map = {}; tatCaManh(bai).forEach(m=>map[m.uid]=m);
+  const ten = S.che === "nhom" ? ("Nhóm " + S.doi) : S.ten;
+  $("#kq-body").innerHTML = `
+    <div class="hero"><svg><use href="#i-khen"/></svg>
+      <div style="flex:1;min-width:170px">
+        <div class="eyebrow">${esc(ten)}${S.che==="nhom" ? " · " + esc(TO[S.doi-1].to) : " · chơi một mình"}</div>
+        <div class="dh">${esc(kq.xl.dh)}</div>
+        <p class="small muted" style="margin-top:3px">${esc(kq.xl.nx)}</p></div>
+      <div style="text-align:right"><div class="big">${kq.diem}</div>
+        <div class="small muted mono">trên ${kq.toiDa}</div>
+        <div class="small muted mono">${phutGiay(giay)}</div></div></div>
+
+    <div id="kq-bang" style="margin-top:14px"></div>
+
+    <div class="card" style="margin-top:14px"><div class="eyebrow">Bảng cộng trừ</div>
+      <div class="tw" style="margin-top:8px"><table>
+        <tr><td>Mảnh thật đúng vị trí</td><td class="n">${kq.dung} / ${kq.nThat}</td><td class="n ok">+${kq.dung}</td></tr>
+        <tr><td>Mảnh giả lọt vào câu trả lời</td><td class="n">${kq.sot} / ${kq.nGia}</td><td class="n ${kq.sot?"bad":""}">${kq.sot?"−"+kq.sot:"0"}</td></tr>
+        <tr><td>Thưởng ném đúng cả ${kq.nGia} mảnh giả vào thùng</td><td class="n">${kq.loai} / ${kq.nGia}</td><td class="n ${kq.thuong?"ok":""}">${kq.thuong?"+2":"0"}</td></tr>
+        <tr><td><b>Tổng</b></td><td class="n">trên ${kq.toiDa}</td><td class="n"><b>${kq.diem}</b></td></tr>
+      </table></div>
+      ${soSua ? `<div class="note"><b class="bad">${soSua} mảnh sửa bằng bút đỏ ở vòng mở.</b> Vẫn tính điểm như thường — nhưng đó chính là những chỗ ${ai} chưa nhớ, cần ôn trước tiên.${kqKin ? ` Nếu chấm ngay lúc hết vòng kín, ${ai} được <b>${kqKin.diem}</b> điểm.` : ""}</div>` : ""}
+      ${S.hetGio?`<div class="warn">Hết vòng mở nên bài tự chốt. Ô nào chưa kịp điền bị tính là bỏ trống.</div>`:""}
+    </div>
+
+    <div class="card" style="margin-top:14px"><div class="eyebrow">Từng vị trí trong câu trả lời</div>
+      <div style="margin-top:6px">${kq.chiTiet.map(c=>{
+        const dung = map[c.uid], dat = c.dangO ? map[c.dangO] : null;
+        const doDo = c.dangO && sua[c.dangO] ? '<span class="but">bút đỏ</span>' : "";
+        return `<div class="line"><span class="m">${c.vt}</span>
+          <span style="flex:1">${c.ok
+            ? `<span class="ok">✓</span> <span class="${doDo?"sua":""}">${esc(dung.tx)}</span>${doDo}`
+            : `<span class="bad">✕</span> <b>Đúng phải là:</b> ${esc(dung.tx)}<br>
+               <span class="small muted">Đang đặt: ${dat ? (dat.k==="g" ? '<span class="bad">một mảnh giả — '+esc(dat.tx)+'</span>' : esc(dat.tx)) : "<i>bỏ trống</i>"}</span>${doDo}`}
+          </span></div>`;
+      }).join("")}</div></div>
+
+    <div class="card" style="margin-top:14px"><div class="eyebrow">Bốn mảnh giả — sai ở đâu</div>
+      <div style="margin-top:6px">${kq.giaCT.map(g=>`
+        <div class="line"><span class="m">${g.tt==="sot" ? '<span class="bad">lọt</span>' : g.tt==="loai" ? '<span class="ok">✓</span>' : "—"}</span>
+          <span style="flex:1"><b>${esc(g.tx)}</b>${g.tt==="chua" ? ' <span class="small muted">· chưa ai ném vào thùng: không bị trừ, nhưng mất thưởng +2</span>' : ""}<br><span class="small muted">${esc(g.giai)}</span></span></div>`).join("")}</div>
+    </div>`;
+  veBangThanhTich(kq, giay, kqKin);
+  show("kq");
+}
+
+function bangHTML(hang){
+  return `<div class="card">
+    <div class="eyebrow">Bảng thành tích</div>
+    <div class="tw" style="margin-top:8px"><table class="bt">
+      <tr><th>Hạng</th><th>Nhóm</th><th class="n">Điểm</th><th class="n">Hết vòng kín</th><th class="n">Thời gian</th></tr>
+      ${hang.map((r,i)=>`<tr>
+        <td class="n"><b>${i+1}</b></td>
+        <td><span class="nhom"><span class="ch" style="background:var(--d${r.doi})"></span><b>${esc(r.ten)}</b></span>
+          <span class="to">${esc(r.to||"")}</span></td>
+        <td class="n"><b>${r.diem}</b></td>
+        <td class="n muted">${r.diemKin ?? "—"}</td>
+        <td class="n mono">${phutGiay(r.giay||0)}</td></tr>`).join("")}
+    </table></div>
+    <div class="warn"><b>Chụp lại bảng này rồi gửi cho thầy cô qua Zalo.</b> Trang không tự gửi đi đâu cả — không chụp là không ai biết nhóm mình được bao nhiêu.</div>
+  </div>`;
+}
+function veBangThanhTich(kq, giay, kqKin){
+  const el = $("#kq-bang"); if(!el) return;
+  const toi = {doi:S.doi, ten: S.che==="nhom" ? "Nhóm "+S.doi : S.ten,
+    to: S.che==="nhom" ? TO[S.doi-1].to : "chơi một mình",
+    diem:kq.diem, diemKin:(kqKin || kq).diem, giay, danhHieu:kq.xl.dh};
+  el.innerHTML = bangHTML([toi]);
+  if(!DB || S.che !== "nhom") return;
+  try{ if(huyBang) huyBang(); }catch(e){}
+  try{
+    huyBang = DB.collection("bangvang").onSnapshot(snap=>{
+      const rs = (snap.docs||[]).map(d=>d.data())
+        .filter(r=>r && r.ten && r.luc && Date.now() - r.luc < 3*3600000);
+      if(!rs.some(r=>r.doi === S.doi)) rs.push(toi);
+      rs.sort((a,b)=> (b.diem-a.diem) || ((a.giay||0)-(b.giay||0)));
+      el.innerHTML = bangHTML(rs);
+    }, ()=>{});
+  }catch(e){}
+}
+$("#kq-lai").onclick = ()=>{ dungNghe(); show("home"); };
+
+/* ---------- khởi động ---------- */
+veBai($("#ca-bai"), S.baiId); vePhut($("#ca-phut"), S.phut);
+veBai($("#tr-bai"), S.baiId); vePhut($("#tr-phut"), S.phut);
+veBai($("#v-bai"),  S.baiId);
+moTaCa(); veChip(); moTaChia();
+noiDB();
+</script>
+
+</body>
+</html>
